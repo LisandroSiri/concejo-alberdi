@@ -1,0 +1,110 @@
+.comisiones-page {
+  padding-top: 2rem;
+}
+
+.comision-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.comision-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.comision-icon-wrapper {
+  background-color: var(--primary-light);
+  color: var(--primary);
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.comision-title {
+  font-size: 1.25rem;
+  line-height: 1.2;
+}
+
+.comision-body {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.comision-desc {
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+
+.comision-members {
+  margin-top: auto;
+}
+
+.comision-members h4 {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.comision-members ul {
+  list-style: none;
+  padding: 0;
+}
+
+.comision-members li {
+  font-size: 0.95rem;
+  padding: 0.3rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.comision-members li::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--accent);
+}
+
+.president-badge {
+  font-size: 0.75rem;
+  background-color: var(--accent-light);
+  color: var(--accent);
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-full);
+  margin-left: auto;
+  font-weight: 600;
+}
+
+.schedule {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.schedule-label {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.schedule p {
+  margin: 0.3rem 0 0;
+}
