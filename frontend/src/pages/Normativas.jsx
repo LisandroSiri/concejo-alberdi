@@ -51,7 +51,7 @@ const Normativas = () => {
       date: "14/05/2026",
       size: "2.4 MB",
       author: "Comisión de Transporte",
-      contentSimulated: "ORDENANZA Nº 1024/2026\n\nArtículo 1º: Créase el Plan Integral de Movilidad Sustentable para la Ciudad, el cual tendrá por objeto promover el uso de transportes alternativos de baja emisión contaminante...\n\nArtículo 2º: Establécese el trazado obligatorio de ciclovías en las avenidas principales...\n\nArtículo 3º: Regúlese la circulación de Vehículos de Movilidad Personal (VMP)..."
+      contentSimulated:"s" 
     },
     {
       id: "RES-2026-0042",

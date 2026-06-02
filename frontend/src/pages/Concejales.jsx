@@ -7,14 +7,19 @@ import './Concejales.css';
 const Concejales = () => {
   const [selectedBlock, setSelectedBlock] = useState('Todos');
 
-  const blocks = ['Todos', 'Cambia Alberdi', 'Bloque Frente Cívico', 'Bloque Renovación Federal'];
+   const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { y: 0, opacity: 1, transition: { duration: 0.5, ease: "easeOut" } }
+  };
+
+  const blocks = ['Todos', 'Cambia Alberdi', 'Bloque Tucumán Primero', 'Bloque Alberdi Primero', 'Bloque Justicia y Kompromiso', 'Construyendo Futuro', 'Trabajando por Alberdi'];
 
   const concejalesList = [
     {
       id: 1,
       name: "José Romano",
       role: "Presidente",
-      block: "Bloque Unión Democrática",
+      block: "Bloque Tucumán Primero",
       email: "joseromano@consejo.com.ar",
       phone: "",
       image: "src/assets/concejales/presidente.png",
@@ -34,7 +39,7 @@ const Concejales = () => {
       id: 3,
       name: "Cintia Melik Matar",
       role: "Vicepresidente 2º",
-      block: "Bloque Unión Democrática",
+      block: "Construyendo Futuro",
       email: "cmelikmatar@consejo.com.ar",
       phone: "+54 (381) 455-6679",
       image: "src/assets/concejales/default.jpg",
@@ -54,7 +59,7 @@ const Concejales = () => {
       id: 5,
       name: "Ana Campos",
       role: "Concejal",
-      block: "Bloque Renovación Federal",
+      block: "Bloque Tucumán Primero",
       email: "anacampos@consejo.com.ar",
       phone: "+54 (381) 455-6681",
       image: "src/assets/concejales/default.jpg",
@@ -64,7 +69,7 @@ const Concejales = () => {
       id: 6,
       name: "José Calderón",
       role: "Concejal",
-      block: "Bloque Renovación Federal",
+      block: "Bloque Alberdi Primero",
       email: "josecalderon@consejo.com.ar",
       phone: "+54 (381) 455-6682",
       image: "src/assets/concejales/concejal4.jpg",
@@ -84,7 +89,7 @@ const Concejales = () => {
       id: 8,
       name: "Sergio Muray",
       role: "Concejal",
-      block: "Bloque Unión Democrática",
+      block: "Bloque Justicia y Kompromiso",
       email: "sergiomuray@consejo.com.ar",
       phone: "+54 (381) 455-6678",
       image: "src/assets/concejales/concejal5.jpg",
@@ -94,7 +99,7 @@ const Concejales = () => {
       id: 9,
       name: "Nanci Cuenca",
       role: "Concejal",
-      block: "Bloque Renovación Federal",
+      block: "Trabajando por Alberdi",
       email: "nancycuenca@consejo.com.ar",
       phone: "+54 (381) 455-6678",
       image: "src/assets/concejales/default.jpg",
@@ -104,7 +109,7 @@ const Concejales = () => {
       id: 10,
       name: "Marcelo Ogas",
       role: "Concejal",
-      block: "Bloque Frente Cívico",
+      block: "Bloque Tucumán Primero",
       email: "marceloogas@consejo.com.ar",
       phone: "+54 (381) 455-6678",
       image: "src/assets/concejales/default.jpg",
@@ -145,17 +150,16 @@ const Concejales = () => {
       </div>
 
       {/* Grid of Councillors */}
-      <motion.div
+      <div
         className="grid grid-3"
-        layout
         style={{ marginTop: '2rem' }}
       >
-        <AnimatePresence mode="popLayout">
+        <AnimatePresence mode="wait">
           {filteredConcejales.map((c) => (
-            <motion.div
+            <motion.div 
               key={c.id}
               className="card concejal-card"
-              layout
+              layout= "position"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
@@ -195,7 +199,7 @@ const Concejales = () => {
             </motion.div>
           ))}
         </AnimatePresence>
-      </motion.div>
+      </div>
     </motion.div>
   );
 };

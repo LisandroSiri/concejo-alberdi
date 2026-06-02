@@ -1,19 +1,24 @@
 /* Home Page Specific Styles */
 
 .hero-banner {
-  position: static;
+  position: relative;
   background: radial-gradient(circle at 80% 20%, var(--primary-light) 0%, transparent 50%);
-  padding: 6.5rem 0;
+  padding: 8rem 0;
   overflow: hidden;
   align-items: center;
   display: flex;
-  min-height: 70vh;
+  min-height: 50vh;
 }
 
 .hero-content {
   max-width: 750px;
   position: relative;
   z-index: 2;
+}
+
+.hero-content .badge {
+  margin-top: -2.2rem;
+  margin-bottom: 8.2rem;
 }
 
 .container {
@@ -45,9 +50,9 @@
 .hero-buttons {
   display: flex;
   gap: 1rem;
-  padding: 5rem 0;
+  padding: 1.5rem 0 0 0;
   flex-wrap: wrap;
-  margin-top: 250px;
+  margin-top: 1rem;
 }
 
 .btn-hero {
@@ -190,24 +195,35 @@
 }
 
 .quick-access {
-  margin-top: -200px;
+  margin-top: -3rem;
   position: relative;
   z-index: 10;
   background: transparent;
+  padding-top: 0;
 }
 
 @media (max-width: 768px) {
   .hero-banner {
-    padding: 4rem 0 6rem 0;
+    padding: 6rem 0;
+    min-height: auto;
   }
 
   .hero-content {
-    padding: 1.5rem;
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
   }
 
-
+  .hero-buttons {
+    margin-top: 0.5rem;
+    padding: 1rem 0 0 0;
+    justify-content: center;
+  }
 
   .quick-access {
-    margin-top: +190px;
+    margin-top: 2rem;
+    padding: 2rem 0;
   }
 }

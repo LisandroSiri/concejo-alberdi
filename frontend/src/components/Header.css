@@ -168,6 +168,43 @@
   padding-left: 0.5rem;
 }
 
+@media (max-width: 768px) {
+  .logo-icon-wrapper {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .brand-title {
+    font-size: 1rem;
+  }
+  
+  .brand-subtitle {
+    font-size: 0.7rem;
+  }
+  
+  .main-header {
+    height: 64px;
+  }
+
+  .mobile-nav-drawer {
+    top: 64px;
+  }
+}
+
+@media (max-width: 380px) {
+  .brand-title {
+    font-size: 0.85rem;
+  }
+  
+  .brand-subtitle {
+    display: none;
+  }
+  
+  .brand-logo {
+    gap: 0.5rem;
+  }
+}
+
 @media (min-width: 768px) {
   .desktop-nav {
     display: block;

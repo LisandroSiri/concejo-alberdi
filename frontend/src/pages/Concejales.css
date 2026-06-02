@@ -3,7 +3,6 @@
 .filter-tabs-container {
   display: flex;
   justify-content: center;
-  overflow-x: auto;
   padding-bottom: 0.5rem;
   margin-bottom: 1.5rem;
 }
