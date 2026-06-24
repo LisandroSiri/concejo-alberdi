@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Landmark, Calendar, FileText, Users, ArrowRight, ShieldCheck, FlameKindling, Info, BadgeCheck } from 'lucide-react';
+import { Landmark, Calendar, FileText, Users, ArrowRight, ShieldCheck, FlameKindling, Info, BadgeCheck, Play, X, ExternalLink, Clock, MapPin, Mail, Phone } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { getSesionesRecientes } from '../data/agendaData';
+import { broadcastsData } from '../data/broadcastsData';
 import './Home.css';
 
 const Home = () => {
@@ -23,6 +24,8 @@ const Home = () => {
   };
 
   const recentSessions = getSesionesRecientes(4);
+  const [selectedVideo, setSelectedVideo] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <motion.main
@@ -53,7 +56,6 @@ const Home = () => {
             </motion.div>
           </div>
         </div>
-        {/* Abstract decorative shapes in CSS */}
         <div className="hero-bg-accent"></div>
       </section>
 
@@ -74,7 +76,7 @@ const Home = () => {
               <div className="icon-wrapper">
                 <FileText size={32} className="card-icon accent-color" />
               </div>
-              <h3> Digesto Digital</h3>
+              <h3>Digesto Digital</h3>
               <p>Busca en tiempo real el registro oficial de ordenanzas, resoluciones, decretos y comunicaciones vigentes.</p>
               <Link to="/normativas" className="card-link">Explorar digesto &rarr;</Link>
             </motion.div>
@@ -115,7 +117,7 @@ const Home = () => {
 
             <motion.div variants={itemVariants} className="session-right">
               <div className="values-badge">
-                <ShieldCheck size={20} /> Transparencia Activa
+                Transparencia Activa
               </div>
               <h2 className="serif-title">Compromiso con el Ciudadano</h2>
               <p>
@@ -139,6 +141,189 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* SECCIÓN: EMISIONES PASADAS (Videos) */}
+      <section className="multimedia-section section">
+        <div className="container">
+          <div className="section-title">
+            <span className="badge badge-accent">Multimedia</span>
+            <h2 className="serif-title" style={{ marginTop: '0.5rem' }}>Emisiones Pasadas</h2>
+            <p>Accede a las sesiones grabadas de nuestro concejo deliberante.</p>
+          </div>
+
+          {/* Grid de videos */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="video-grid"
+          >
+            {broadcastsData.map((video) => (
+              <div
+                key={video.id}
+                className="video-card"
+                onClick={() => {
+                  setSelectedVideo(video);
+                  setIsModalOpen(true);
+                }}
+              >
+                <div className="video-thumbnail-container">
+                  <span className="badge badge-primary video-badge">{video.category}</span>
+                  <img
+                    src={`https://img.youtube.com/vi/${video.youtubeId}/hqdefault.jpg`}
+                    alt={video.title}
+                    className="video-thumbnail"
+                  />
+                  <div className="play-overlay">
+                    <div className="play-icon-btn">
+                      <Play size={20} fill="currentColor" />
+                    </div>
+                  </div>
+                </div>
+                <div className="video-card-body">
+                  <h3 className="video-card-title">{video.title}</h3>
+                  <div className="video-card-meta">
+                    <div className="meta-item">
+                      <Calendar size={14} />
+                      <span>{video.dateDisplay}</span>
+                    </div>
+                    <div className="meta-item">
+                      <Clock size={14} />
+                      <span>{video.duration}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* SECCIÓN: UBICACIÓN DEL RECINTO (Mapa) */}
+      <section className="multimedia-section section" style={{ backgroundColor: 'var(--primary-light)' }}>
+        <div className="container">
+          <div className="section-title">
+            <span className="badge badge-teal">Ubicación</span>
+            <h2 className="serif-title" style={{ marginTop: '0.5rem' }}>Ubicación del Recinto</h2>
+            <p>Conoce la ubicación exacta de nuestro recinto legislativo.</p>
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="map-grid"
+          >
+            <div className="card map-info-card">
+              <div className="map-info-header">
+                <span className="badge badge-teal">Contacto y Sede</span>
+                <h3 className="serif-title" style={{ marginTop: '0.75rem' }}>Honorable Concejo Deliberante</h3>
+                <p>Nuestra sede legislativa está abierta para la participación de todos los vecinos.</p>
+              </div>
+              <div className="map-info-list">
+                <div className="map-info-item">
+                  <div className="icon-box">
+                    <MapPin size={20} />
+                  </div>
+                  <div className="map-info-text">
+                    <h4>Dirección Sede</h4>
+                    <p>Lidoro Quinteros y Manuel Campero</p>
+                    <span>Juan Bautista Alberdi, Tucumán, Argentina</span>
+                  </div>
+                </div>
+                <div className="map-info-item">
+                  <div className="icon-box">
+                    <Phone size={20} />
+                  </div>
+                  <div className="map-info-text">
+                    <h4>Teléfono de Atención</h4>
+                    <p>+54 (381) 888-8888</p>
+                    <span>Lunes a Viernes de 8:00 a 13:00 hs</span>
+                  </div>
+                </div>
+                <div className="map-info-item">
+                  <div className="icon-box">
+                    <Mail size={20} />
+                  </div>
+                  <div className="map-info-text">
+                    <h4>Correo Electrónico</h4>
+                    <a href="mailto:info@consejo.gob.ar" style={{ color: 'var(--primary)', fontWeight: 500 }}>
+                      info@consejo.gob.ar
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="map-container">
+              <iframe
+                title="Mapa de ubicación del Concejo Deliberante"
+                className="map-iframe"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d566.5126258366333!2d-65.6165325043218!3d-27.587393202438044!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9423e8fe4762c315%3A0x992a4002d031a4f3!2sMunicipalidad%20de%20Juan%20Bautista%20Alberdi!5e1!3m2!1ses-419!2sar!4v1782266596284!5m2!1ses-419!2sar"
+                allowFullScreen=""
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              ></iframe>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Video Preview Lightbox/Modal */}
+      {isModalOpen && selectedVideo && (
+        <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            className="modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button className="modal-close-btn" onClick={() => setIsModalOpen(false)} aria-label="Cerrar reproductor">
+              <X size={18} />
+            </button>
+            <div className="modal-video-container">
+              <iframe
+                title={selectedVideo.title}
+                className="modal-video-iframe"
+                src={`https://www.youtube.com/embed/${selectedVideo.youtubeId}?autoplay=1&rel=0`}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+            <div className="modal-body">
+              <div className="modal-meta-row">
+                <span className="badge badge-accent">{selectedVideo.category}</span>
+                <div className="meta-item" style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center' }}>
+                  <Calendar size={14} style={{ marginRight: '0.25rem' }} />
+                  {selectedVideo.dateDisplay}
+                </div>
+                <div className="meta-item" style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center' }}>
+                  <Clock size={14} style={{ marginRight: '0.25rem' }} />
+                  Duración: {selectedVideo.duration}
+                </div>
+              </div>
+              <h3 className="modal-title">{selectedVideo.title}</h3>
+              <p className="modal-desc">{selectedVideo.description}</p>
+            </div>
+            <div className="modal-footer">
+              <div className="modal-location">
+                <MapPin size={16} style={{ color: 'var(--accent)' }} />
+                <span>Lugar de sesión: {selectedVideo.locationName}</span>
+              </div>
+              <a
+                href={`https://www.youtube.com/watch?v=${selectedVideo.youtubeId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-primary"
+                style={{ padding: '0.4rem 1rem', fontSize: '0.85rem' }}
+              >
+                Ver en YouTube <ExternalLink size={14} />
+              </a>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </motion.main>
   );
 };

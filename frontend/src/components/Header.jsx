@@ -81,21 +81,7 @@ const Header = () => {
 
         {/* Theme and Drawer controls */}
         <div className="header-actions">
-          <button
-            onClick={toggleTheme}
-            className="theme-toggle-btn"
-            aria-label="Alternar tema"
-          >
-            <motion.div
-              key={theme}
-              initial={{ y: -10, opacity: 0, rotate: -45 }}
-              animate={{ y: 0, opacity: 1, rotate: 0 }}
-              exit={{ y: 10, opacity: 0, rotate: 45 }}
-              transition={{ duration: 0.2 }}
-            >
-              {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
-            </motion.div>
-          </button>
+ 
 
           {/* Hamburger button */}
           <button

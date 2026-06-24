@@ -20,7 +20,7 @@ const Concejales = () => {
       name: "José Romano",
       role: "Presidente",
       block: "Bloque Tucumán Primero",
-      email: "joseromano@consejo.com.ar",
+      email: "joseromano@concejo.com.ar",
       phone: "",
       image: "src/assets/concejales/presidente.png",
       socials: { facebook: "#", instagram: "#" }
@@ -30,7 +30,7 @@ const Concejales = () => {
       name: "Adolfo Diaz Chavero",
       role: "Vicepresidente 1º",
       block: "Cambia Alberdi",
-      email: "chavero@consejo.com.ar",
+      email: "chavero@concejo.com.ar",
       phone: "+54 (381) 455-6678",
       image: "src/assets/concejales/cocejal2.jpg",
       socials: { facebook: "#", instagram: "#" }
@@ -40,7 +40,7 @@ const Concejales = () => {
       name: "Cintia Melik Matar",
       role: "Vicepresidente 2º",
       block: "Construyendo Futuro",
-      email: "cmelikmatar@consejo.com.ar",
+      email: "cmelikmatar@concejo.com.ar",
       phone: "+54 (381) 455-6679",
       image: "src/assets/concejales/default.jpg",
       socials: { facebook: "#", instagram: "#" }
@@ -50,7 +50,7 @@ const Concejales = () => {
       name: "Martina Siri",
       role: "Concejal",
       block: "Cambia Alberdi",
-      email: "martinasiri@consejo.com.ar",
+      email: "martinasiri@concejo.com.ar",
       phone: "+54 (381) 455-6680",
       image: "/src/assets/concejales/concejal1.jpg",
       socials: { facebook: "#", instagram: "#" }
@@ -60,7 +60,7 @@ const Concejales = () => {
       name: "Ana Campos",
       role: "Concejal",
       block: "Bloque Tucumán Primero",
-      email: "anacampos@consejo.com.ar",
+      email: "anacampos@concejo.com.ar",
       phone: "+54 (381) 455-6681",
       image: "src/assets/concejales/default.jpg",
       socials: { facebook: "#", instagram: "#" }
@@ -70,7 +70,7 @@ const Concejales = () => {
       name: "José Calderón",
       role: "Concejal",
       block: "Bloque Alberdi Primero",
-      email: "josecalderon@consejo.com.ar",
+      email: "josecalderon@concejo.com.ar",
       phone: "+54 (381) 455-6682",
       image: "src/assets/concejales/concejal4.jpg",
       socials: { facebook: "#", instagram: "#" }
@@ -80,7 +80,7 @@ const Concejales = () => {
       name: "Ramiro Aguilera",
       role: "Concejal",
       block: "Cambia Alberdi",
-      email: "ramiroaguilera@consejo.com.ar",
+      email: "ramiroaguilera@concejo.com.ar",
       phone: "+54 (381) 455-6678",
       image: "src/assets/concejales/concejal3.jpg",
       socials: { facebook: "#", instagram: "#" }
@@ -90,7 +90,7 @@ const Concejales = () => {
       name: "Sergio Muray",
       role: "Concejal",
       block: "Bloque Justicia y Kompromiso",
-      email: "sergiomuray@consejo.com.ar",
+      email: "sergiomuray@concejo.com.ar",
       phone: "+54 (381) 455-6678",
       image: "src/assets/concejales/concejal5.jpg",
       socials: { facebook: "#", instagram: "#" }
@@ -100,7 +100,7 @@ const Concejales = () => {
       name: "Nanci Cuenca",
       role: "Concejal",
       block: "Trabajando por Alberdi",
-      email: "nancycuenca@consejo.com.ar",
+      email: "nancycuenca@concejo.com.ar",
       phone: "+54 (381) 455-6678",
       image: "src/assets/concejales/default.jpg",
       socials: { facebook: "#", instagram: "#" }
@@ -110,7 +110,7 @@ const Concejales = () => {
       name: "Marcelo Ogas",
       role: "Concejal",
       block: "Bloque Tucumán Primero",
-      email: "marceloogas@consejo.com.ar",
+      email: "marceloogas@concejo.com.ar",
       phone: "+54 (381) 455-6678",
       image: "src/assets/concejales/default.jpg",
       socials: { facebook: "#", instagram: "#" }
@@ -182,8 +182,7 @@ const Concejales = () => {
                     <a href={`mailto:${c.email}`}>{c.email}</a>
                   </div>
                   <div className="contact-item">
-                    <Phone size={16} />
-                    <span>{c.phone}</span>
+
                   </div>
                 </div>
 

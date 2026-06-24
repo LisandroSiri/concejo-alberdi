@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "module": "nodenext",
+    "module": "node16",
     "target": "es2022",
-    "moduleResolution": "nodenext",
+    "moduleResolution": "node16",
     "esModuleInterop": true,
     "strict": true,
     "skipLibCheck": true,

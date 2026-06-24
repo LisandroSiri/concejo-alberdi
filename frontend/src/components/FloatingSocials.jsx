@@ -5,10 +5,11 @@ import './FloatingSocials.css';
 
 const FloatingSocials = () => {
   const containerVariants = {
-    hidden: { opacity: 0, x: 20 },
+    hidden: { opacity: 0, x: 20, y: "-50%" },
     visible: {
       opacity: 1,
       x: 0,
+      y: "-50%",
       transition: {
         delay: 0.5,
         staggerChildren: 0.1

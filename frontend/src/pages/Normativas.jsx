@@ -360,7 +360,7 @@ ${headerLine}`;
                   <h4 className="serif-title" style={{ fontSize: '1.25rem', marginBottom: '0.5rem', color: 'var(--text-main)' }}>{doc.title}</h4>
                   <p style={{ fontSize: '0.95rem', marginBottom: '1rem' }}>{doc.description}</p>
 
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                  <div className="norm-card-meta">
                     <span>Iniciador: <strong>{doc.author}</strong></span>
                     <span>Tamaño: {doc.size}</span>
                   </div>

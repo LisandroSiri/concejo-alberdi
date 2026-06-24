@@ -268,11 +268,46 @@
   box-shadow: var(--shadow-sm);
 }
 
+.norm-card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
 @media (max-width: 768px) {
   .reset-filters-btn {
     width: 100%;
     justify-content: center;
     align-self: stretch;
+  }
+
+  .norm-card-footer {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .norm-card-footer button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .norm-card {
+    padding: 1.25rem !important;
+  }
+
+  .norm-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .norm-card-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
   }
 }
 

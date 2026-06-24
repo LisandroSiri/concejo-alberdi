@@ -42,4 +42,8 @@
     width: 36px;
     height: 36px;
   }
+
+  .floating-social-btn:hover {
+    transform: none !important;
+  }
 }

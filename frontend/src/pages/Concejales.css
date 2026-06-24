@@ -5,10 +5,7 @@
   justify-content: center;
   padding-bottom: 0.5rem;
   margin-bottom: 1.5rem;
-}
-
-.filter-tabs-container::-webkit-scrollbar {
-  height: 4px;
+  width: 100%;
 }
 
 .filter-tabs {
@@ -18,7 +15,31 @@
   padding: 0.4rem;
   border-radius: var(--radius-full);
   border: 1px solid var(--border);
-  white-space: nowrap;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+@media (max-width: 1024px) {
+  .filter-tabs-container {
+    justify-content: flex-start;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-left: 0;
+    padding-right: 0;
+    scrollbar-width: none; /* Hide scrollbar Firefox */
+  }
+
+  .filter-tabs-container::-webkit-scrollbar {
+    display: none; /* Hide scrollbar Chrome/Safari/Opera */
+  }
+
+  .filter-tabs {
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    margin-left: 1.5rem;
+    margin-right: 1.5rem;
+    border-radius: var(--radius-full);
+  }
 }
 
 .filter-btn {
