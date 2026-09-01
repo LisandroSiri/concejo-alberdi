@@ -1,0 +1,2127 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Concejo Alberdi · Panel de Gestión</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap"
+    rel="stylesheet" />
+  <style>
+    /* ─── RESET & VARIABLES ─── */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #0a0c12;
+      --surface: #141724;
+      --surface-hover: #1c2033;
+      --card: #1a1e2f;
+      --card-hover: #232842;
+      --border: #2a2f45;
+      --border-hover: #3d4460;
+      --accent: #6366f1;
+      --accent-light: #818cf8;
+      --accent-dark: #4f46e5;
+      --accent-glow: rgba(99, 102, 241, 0.25);
+      --accent2: #8b5cf6;
+      --text: #e8ecf4;
+      --text-secondary: #99a3c7;
+      --text-muted: #5e678a;
+      --green: #22c55e;
+      --green-bg: rgba(34, 197, 94, 0.12);
+      --red: #ef4444;
+      --red-bg: rgba(239, 68, 68, 0.12);
+      --yellow: #f59e0b;
+      --yellow-bg: rgba(245, 158, 11, 0.12);
+      --radius: 12px;
+      --radius-sm: 8px;
+      --shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+      --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    html {
+      font-size: 14px;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, system-ui, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--surface);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-hover);
+      border-radius: 8px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent);
+    }
+
+    /* ─── HEADER ─── */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      backdrop-filter: blur(12px);
+      background: rgba(20, 23, 36, 0.92);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .brand span {
+      background: linear-gradient(to right, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .header-actions .user-badge {
+      background: var(--card);
+      padding: 0.3rem 0.9rem;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      font-weight: 500;
+      font-size: 0.75rem;
+    }
+
+    .btn-logout {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      padding: 0.35rem 1rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: var(--transition);
+    }
+
+    .btn-logout:hover {
+      border-color: var(--red);
+      color: var(--red);
+      background: var(--red-bg);
+    }
+
+    /* ─── LAYOUT ─── */
+    .app {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      flex: 1;
+      min-height: 0;
+    }
+
+    /* ─── SIDEBAR ─── */
+    nav {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 1rem 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+      overflow-y: auto;
+    }
+
+    .nav-label {
+      font-size: 0.6rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      padding: 0.75rem 0.75rem 0.35rem;
+    }
+
+    nav a {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.55rem 0.75rem;
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 500;
+      transition: var(--transition);
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      width: 100%;
+      text-align: left;
+    }
+
+    nav a:hover {
+      background: var(--surface-hover);
+      color: var(--text);
+    }
+
+    nav a.active {
+      background: var(--accent-glow);
+      color: var(--accent-light);
+      font-weight: 600;
+      box-shadow: inset 3px 0 0 var(--accent);
+    }
+
+    nav a .icon {
+      width: 18px;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .nav-spacer {
+      flex: 1;
+    }
+
+    /* ─── MAIN ─── */
+    main {
+      padding: 1.5rem 2rem;
+      overflow-y: auto;
+      background: var(--bg);
+    }
+
+    /* ─── SECTION ─── */
+    .section {
+      display: none;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .page-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(to right, var(--text), var(--text-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .page-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.1rem;
+    }
+
+    /* ─── STATS GRID ─── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(to right, var(--accent), var(--accent2));
+      opacity: 0.7;
+    }
+
+    .stat-card:hover {
+      border-color: var(--border-hover);
+      background: var(--card-hover);
+    }
+
+    .stat-card .label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-weight: 600;
+    }
+
+    .stat-card .value {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-top: 0.25rem;
+      letter-spacing: -0.02em;
+    }
+
+    .stat-card .value .trend {
+      font-size: 0.75rem;
+      font-weight: 500;
+      margin-left: 0.5rem;
+      color: var(--green);
+    }
+
+    /* ─── TABLE CARD ─── */
+    .table-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: var(--transition);
+    }
+
+    .table-card:hover {
+      border-color: var(--border-hover);
+    }
+
+    .table-card-header {
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .table-card-header h3 {
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .table-card-header .actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .table-scroll {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 0.7rem 1.25rem;
+      text-align: left;
+      font-size: 0.85rem;
+    }
+
+    th {
+      background: var(--surface);
+      color: var(--text-muted);
+      font-weight: 500;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: rgba(99, 102, 241, 0.04);
+    }
+
+    td .truncate {
+      max-width: 180px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    /* ─── BADGES ─── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.15rem 0.6rem;
+      border-radius: 20px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .badge-admin {
+      background: rgba(99, 102, 241, 0.2);
+      color: var(--accent-light);
+    }
+
+    .badge-operador {
+      background: rgba(148, 163, 184, 0.12);
+      color: var(--text-secondary);
+    }
+
+    .badge-ordenanza {
+      background: var(--green-bg);
+      color: var(--green);
+    }
+
+    .badge-decreto {
+      background: var(--accent-glow);
+      color: var(--accent-light);
+    }
+
+    .badge-resolucion {
+      background: var(--yellow-bg);
+      color: var(--yellow);
+    }
+
+    .badge-comunicacion {
+      background: rgba(148, 163, 184, 0.1);
+      color: var(--text-muted);
+    }
+
+    .badge-vigente {
+      background: var(--green-bg);
+      color: var(--green);
+    }
+
+    .badge-no-vigente {
+      background: var(--red-bg);
+      color: var(--red);
+    }
+
+    .badge-activo {
+      background: var(--green-bg);
+      color: var(--green);
+    }
+
+    .badge-inactivo {
+      background: var(--red-bg);
+      color: var(--red);
+    }
+
+    .badge-ejecutada {
+      background: var(--green-bg);
+      color: var(--green);
+    }
+
+    .badge-parcial {
+      background: var(--yellow-bg);
+      color: var(--yellow);
+    }
+
+    .badge-pendiente {
+      background: var(--red-bg);
+      color: var(--red);
+    }
+
+    /* ─── FILTERS ─── */
+    .filters-bar {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 1rem;
+      background: var(--surface);
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+
+    .filters-bar select,
+    .filters-bar input {
+      padding: 0.4rem 0.75rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-size: 0.8rem;
+      outline: none;
+      transition: var(--transition);
+      min-height: 34px;
+    }
+
+    .filters-bar select:focus,
+    .filters-bar input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    /* ─── BUTTONS ─── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 1.1rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: var(--transition);
+      font-family: inherit;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      box-shadow: 0 2px 12px var(--accent-glow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px var(--accent-glow);
+      opacity: 0.92;
+    }
+
+    .btn-secondary {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent);
+      color: var(--text);
+      background: var(--surface-hover);
+    }
+
+    .btn-danger {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    .btn-danger:hover {
+      border-color: var(--red);
+      color: var(--red);
+      background: var(--red-bg);
+    }
+
+    .btn-success {
+      background: var(--green-bg);
+      border: 1px solid var(--green);
+      color: var(--green);
+    }
+
+    .btn-success:hover {
+      background: var(--green);
+      color: #fff;
+    }
+
+    .btn-sm {
+      padding: 0.25rem 0.7rem;
+      font-size: 0.7rem;
+    }
+
+    .btn-icon {
+      padding: 0.4rem 0.6rem;
+      font-size: 0.9rem;
+    }
+
+    .btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    /* ─── MODAL ─── */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 1rem;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .modal {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      width: min(480px, 100%);
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow);
+    }
+
+    .modal-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+    }
+
+    .modal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .modal-grid .full {
+      grid-column: 1 / -1;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ─── FORMS ─── */
+    .form-group {
+      margin-bottom: 0.85rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.55rem 0.75rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-size: 0.85rem;
+      outline: none;
+      transition: var(--transition);
+      font-family: inherit;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    /* ─── UPLOAD ZONE ─── */
+    .upload-zone {
+      border: 2px dashed var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1.5rem;
+      text-align: center;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .upload-zone:hover {
+      border-color: var(--accent);
+      color: var(--text);
+      background: var(--surface);
+    }
+
+    .upload-zone input {
+      display: none;
+    }
+
+    .upload-zone .icon-big {
+      font-size: 2.5rem;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    /* ─── TOAST ─── */
+    .toast-container {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      z-index: 200;
+      max-width: 360px;
+    }
+
+    .toast {
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-sm);
+      background: var(--card);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      font-size: 0.85rem;
+      animation: slideUp 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .toast-success {
+      border-left: 4px solid var(--green);
+    }
+
+    .toast-error {
+      border-left: 4px solid var(--red);
+    }
+
+    .toast-info {
+      border-left: 4px solid var(--accent);
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ─── LOADING ─── */
+    .loading-shimmer {
+      display: inline-block;
+      width: 100%;
+      height: 1em;
+      background: linear-gradient(90deg, var(--surface) 25%, var(--card) 50%, var(--surface) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 4px;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: 200% 0;
+      }
+
+      100% {
+        background-position: -200% 0;
+      }
+    }
+
+    /* ─── EMPTY STATE ─── */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-muted);
+    }
+
+    .empty-state .icon {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      nav {
+        display: none;
+      }
+
+      nav.mobile-open {
+        display: flex;
+        position: fixed;
+        inset: 0;
+        z-index: 30;
+        background: var(--surface);
+        padding: 2rem 1rem;
+      }
+
+      header {
+        padding: 0.5rem 1rem;
+        flex-wrap: wrap;
+      }
+
+      .brand {
+        font-size: 0.9rem;
+      }
+
+      main {
+        padding: 1rem;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .modal {
+        padding: 1.25rem;
+      }
+
+      .modal-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .filters-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .filters-bar select,
+      .filters-bar input {
+        width: 100%;
+      }
+
+      .toast-container {
+        left: 1rem;
+        right: 1rem;
+        bottom: 1rem;
+        max-width: none;
+      }
+
+      .table-card-header {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .table-card-header .actions {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .header-actions .user-badge {
+        display: none;
+      }
+
+      th,
+      td {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.75rem;
+      }
+    }
+
+    /* ─── MOBILE MENU TOGGLE ─── */
+    .menu-toggle {
+      display: none;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.3rem 0.6rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 1.2rem;
+    }
+
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ─── TOAST CONTAINER ─── -->
+  <div class="toast-container" id="toasts"></div>
+
+  <!-- ─── LOGIN OVERLAY ─── -->
+  <div id="login-overlay" class="modal-backdrop"
+    style="display:flex;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);">
+    <div class="modal" style="max-width:360px;">
+      <div style="text-align:center;margin-bottom:1.5rem;">
+        <div style="font-size:2rem;margin-bottom:0.25rem;">⚖</div>
+        <h2 style="font-size:1.3rem;font-weight:700;">Panel <span
+            style="background:linear-gradient(to right,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Admin</span>
+        </h2>
+        <p style="color:var(--text-muted);font-size:0.8rem;margin-top:0.25rem;">Concejo Deliberante de Alberdi</p>
+      </div>
+      <div id="login-error" class="toast toast-error" style="display:none;margin-bottom:1rem;"></div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="login-email" placeholder="admin@concejo.gob.ar" value="admin@concejo.gob.ar" />
+      </div>
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" id="login-pass" placeholder="••••••••" value="admin123" />
+      </div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;padding:0.7rem;"
+        onclick="doLogin()">Iniciar sesión</button>
+      <p style="text-align:center;font-size:0.7rem;color:var(--text-muted);margin-top:1rem;">Credenciales por defecto:
+        admin@concejo.gob.ar / admin123</p>
+    </div>
+  </div>
+
+  <!-- ─── HEADER ─── -->
+  <header>
+    <div style="display:flex;align-items:center;gap:0.75rem;">
+      <button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
+      <div class="brand">
+        <div class="brand-icon">⚖</div>
+        <span>Concejo Alberdi</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <span class="user-badge" id="user-badge">👤 <span id="user-name">—</span></span>
+      <button class="btn-logout" onclick="doLogout()">Cerrar sesión</button>
+    </div>
+  </header>
+
+  <div class="app">
+    <!-- ─── SIDEBAR ─── -->
+    <nav id="sidebar">
+      <span class="nav-label">General</span>
+      <a class="active" onclick="navigate('dashboard')" data-section="dashboard"><span class="icon">📊</span>
+        Dashboard</a>
+
+      <span class="nav-label">Normativa</span>
+      <a onclick="navigate('normas')" data-section="normas"><span class="icon">📄</span> Normas</a>
+      <a onclick="navigate('temas')" data-section="temas"><span class="icon">🏷️</span> Temas</a>
+
+      <span class="nav-label">Actores</span>
+      <a onclick="navigate('concejales')" data-section="concejales"><span class="icon">👤</span> Concejales</a>
+      <a onclick="navigate('bloques')" data-section="bloques"><span class="icon">🏛️</span> Bloques</a>
+
+      <span class="nav-label">Seguimiento</span>
+      <a onclick="navigate('seguimientos')" data-section="seguimientos"><span class="icon">📋</span> Seguimientos</a>
+      <a onclick="navigate('catalogos')" data-section="catalogos"><span class="icon">⚙️</span> Catálogos</a>
+
+      <span class="nav-label">Sistema</span>
+      <a onclick="navigate('usuarios')" data-section="usuarios"><span class="icon">🔐</span> Usuarios</a>
+
+      <div class="nav-spacer"></div>
+      <span style="font-size:0.6rem;color:var(--text-muted);padding:0.75rem;">v1.0.0</span>
+    </nav>
+
+    <!-- ─── MAIN ─── -->
+    <main id="main-content">
+
+      <!-- ─── DASHBOARD ─── -->
+      <div id="s-dashboard" class="section active">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Dashboard</div>
+            <div class="page-subtitle">Resumen general del sistema</div>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="loadDashboard()">🔄 Actualizar</button>
+        </div>
+        <div class="stats-grid" id="stats-grid">
+          <div class="stat-card">
+            <div class="label">Total Normas</div>
+            <div class="value" id="stat-normas">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Concejales Activos</div>
+            <div class="value" id="stat-concejales">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Temas</div>
+            <div class="value" id="stat-temas">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Bloques</div>
+            <div class="value" id="stat-bloques">—</div>
+          </div>
+        </div>
+        <div class="table-card">
+          <div class="table-card-header">
+            <h3>📄 Últimas normas cargadas</h3>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Código</th>
+                  <th>Tipo</th>
+                  <th>Título</th>
+                  <th>Fecha</th>
+                </tr>
+              </thead>
+              <tbody id="latest-normas">
+                <tr>
+                  <td colspan="4" style="text-align:center;color:var(--text-muted);padding:2rem;">Cargando...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── NORMAS ─── -->
+      <div id="s-normas" class="section">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Normas</div>
+            <div class="page-subtitle">Gestión del digesto municipal</div>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-norma')">＋ Nueva norma</button>
+        </div>
+        <div class="filters-bar" id="normas-filters">
+          <select id="f-tipo" onchange="loadNormas()">
+            <option value="">Todos</option>
+            <option>ORDENANZA</option>
+            <option>DECRETO</option>
+            <option>RESOLUCION</option>
+            <option>COMUNICACION</option>
+          </select>
+          <input id="f-año" type="number" placeholder="Año" style="width:90px;" onchange="loadNormas()" />
+          <select id="f-vigente" onchange="loadNormas()">
+            <option value="">Vigencia</option>
+            <option value="true">Vigente</option>
+            <option value="false">No vigente</option>
+          </select>
+          <button class="btn btn-secondary btn-sm" onclick="loadNormas()">🔍 Buscar</button>
+          <button class="btn btn-secondary btn-sm" onclick="resetFilters()">↺ Limpiar</button>
+        </div>
+        <div class="table-card">
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Código</th>
+                  <th>Tipo</th>
+                  <th>Año</th>
+                  <th>Título</th>
+                  <th>Vigente</th>
+                  <th>PDF</th>
+                  <th style="text-align:right;">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="normas-list">
+                <tr>
+                  <td colspan="7" style="text-align:center;color:var(--text-muted);padding:2rem;">Cargando...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── TEMAS ─── -->
+      <div id="s-temas" class="section">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Temas</div>
+            <div class="page-subtitle">Clasificación temática de normas</div>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-tema')">＋ Nuevo tema</button>
+        </div>
+        <div class="table-card">
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th style="text-align:right;">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="temas-list">
+                <tr>
+                  <td colspan="3" style="text-align:center;color:var(--text-muted);padding:2rem;">Cargando...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── CONCEJALES ─── -->
+      <div id="s-concejales" class="section">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Concejales</div>
+            <div class="page-subtitle">Legisladores activos del concejo</div>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-concejal')">＋ Nuevo concejal</button>
+        </div>
+        <div class="table-card">
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Email</th>
+                  <th>Bloque</th>
+                  <th>Estado</th>
+                  <th style="text-align:right;">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="concejales-list">
+                <tr>
+                  <td colspan="5" style="text-align:center;color:var(--text-muted);padding:2rem;">Cargando...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── BLOQUES ─── -->
+      <div id="s-bloques" class="section">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Bloques Políticos</div>
+            <div class="page-subtitle">Agrupaciones del concejo</div>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-bloque')">＋ Nuevo bloque</button>
+        </div>
+        <div class="table-card">
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Sigla</th>
+                  <th>Color</th>
+                  <th>Concejales</th>
+                  <th style="text-align:right;">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="bloques-list">
+                <tr>
+                  <td colspan="5" style="text-align:center;color:var(--text-muted);padding:2rem;">Cargando...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── SEGUIMIENTOS ─── -->
+      <div id="s-seguimientos" class="section">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Seguimientos</div>
+            <div class="page-subtitle">Control de ejecución de normas</div>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="loadSeguimientos()">🔄 Actualizar</button>
+        </div>
+        <div class="table-card">
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Norma</th>
+                  <th>Área</th>
+                  <th>Estado</th>
+                  <th>Periodo</th>
+                  <th>Fecha</th>
+                  <th style="text-align:right;">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="seguimientos-list">
+                <tr>
+                  <td colspan="6" style="text-align:center;color:var(--text-muted);padding:2rem;">Cargando...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── CATÁLOGOS ─── -->
+      <div id="s-catalogos" class="section">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Catálogos</div>
+            <div class="page-subtitle">Configuración de dominios</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;">
+          <div class="table-card">
+            <div class="table-card-header">
+              <h3>📅 Períodos</h3><button class="btn btn-secondary btn-sm"
+                onclick="openModal('modal-periodo')">+</button>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Año</th>
+                    <th>N°</th>
+                    <th>Vigente</th>
+                  </tr>
+                </thead>
+                <tbody id="periodos-list">
+                  <tr>
+                    <td colspan="3" style="text-align:center;color:var(--text-muted);padding:1rem;">—</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="table-card">
+            <div class="table-card-header">
+              <h3>📌 Estados</h3><button class="btn btn-secondary btn-sm" onclick="openModal('modal-estado')">+</button>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                  </tr>
+                </thead>
+                <tbody id="estados-list">
+                  <tr>
+                    <td colspan="2" style="text-align:center;color:var(--text-muted);padding:1rem;">—</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="table-card">
+            <div class="table-card-header">
+              <h3>🏢 Áreas</h3><button class="btn btn-secondary btn-sm" onclick="openModal('modal-area')">+</button>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                  </tr>
+                </thead>
+                <tbody id="areas-list">
+                  <tr>
+                    <td colspan="2" style="text-align:center;color:var(--text-muted);padding:1rem;">—</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── USUARIOS ─── -->
+      <div id="s-usuarios" class="section">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Usuarios</div>
+            <div class="page-subtitle">Gestión de acceso al sistema</div>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-usuario')">＋ Nuevo usuario</button>
+        </div>
+        <div class="table-card">
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Email</th>
+                  <th>Rol</th>
+                  <th>Estado</th>
+                  <th style="text-align:right;">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="usuarios-list">
+                <tr>
+                  <td colspan="5" style="text-align:center;color:var(--text-muted);padding:2rem;">Cargando...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ─── MODALS ────────────────────────────────────────── -->
+
+  <!-- NORMA -->
+  <div id="modal-norma" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-title">📄 Nueva norma</div>
+      <div class="modal-grid">
+        <div class="form-group"><label>Tipo</label><select id="n-tipo">
+            <option>ORDENANZA</option>
+            <option>DECRETO</option>
+            <option>RESOLUCION</option>
+            <option>COMUNICACION</option>
+          </select></div>
+        <div class="form-group"><label>Origen</label><select id="n-origen">
+            <option>CONCEJO</option>
+            <option>EJECUTIVO</option>
+          </select></div>
+        <div class="form-group"><label>Número</label><input id="n-numero" type="number" min="1" /></div>
+        <div class="form-group"><label>Año</label><input id="n-año" type="number" value="2024" /></div>
+      </div>
+      <div class="form-group"><label>Título</label><input id="n-titulo" type="text" placeholder="Título de la norma" />
+      </div>
+      <div class="form-group"><label>Fecha de sanción</label><input id="n-fecha" type="date" /></div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeModal('modal-norma')">Cancelar</button>
+        <button class="btn btn-primary" onclick="crearNorma()">Crear norma</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TEMA -->
+  <div id="modal-tema" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-title">🏷️ Nuevo tema</div>
+      <div class="form-group"><label>Nombre del tema</label><input id="t-nombre" type="text"
+          placeholder="Ej: Obras Públicas" /></div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeModal('modal-tema')">Cancelar</button>
+        <button class="btn btn-primary" onclick="crearTema()">Crear</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONCEJAL -->
+  <div id="modal-concejal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-title">👤 Nuevo concejal</div>
+      <div class="form-group"><label>Nombre completo</label><input id="c-nombre" type="text"
+          placeholder="Nombre Apellido" /></div>
+      <div class="form-group"><label>Email</label><input id="c-email" type="email"
+          placeholder="concejal@concejo.gob.ar" /></div>
+      <div class="form-group"><label>Bloque</label><select id="c-bloque">
+          <option value="">— Seleccionar —</option>
+        </select></div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeModal('modal-concejal')">Cancelar</button>
+        <button class="btn btn-primary" onclick="crearConcejal()">Crear</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOQUE -->
+  <div id="modal-bloque" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-title">🏛️ Nuevo bloque</div>
+      <div class="form-group"><label>Nombre</label><input id="b-nombre" type="text"
+          placeholder="Ej: Unión por Alberdi" /></div>
+      <div class="form-group"><label>Sigla</label><input id="b-sigla" type="text" placeholder="UPA"
+          style="text-transform:uppercase;" /></div>
+      <div class="form-group"><label>Color</label><input id="b-color" type="color" value="#6366f1"
+          style="height:44px;padding:0;border:none;" /></div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeModal('modal-bloque')">Cancelar</button>
+        <button class="btn btn-primary" onclick="crearBloque()">Crear</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- USUARIO -->
+  <div id="modal-usuario" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-title">🔐 Nuevo usuario</div>
+      <div class="form-group"><label>Nombre</label><input id="u-nombre" type="text" placeholder="Nombre" /></div>
+      <div class="form-group"><label>Email</label><input id="u-email" type="email"
+          placeholder="usuario@concejo.gob.ar" /></div>
+      <div class="form-group"><label>Contraseña</label><input id="u-pass" type="password" placeholder="••••••••" />
+      </div>
+      <div class="form-group"><label>Rol</label><select id="u-rol">
+          <option value="OPERADOR">Operador</option>
+          <option value="ADMIN">Administrador</option>
+        </select></div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeModal('modal-usuario')">Cancelar</button>
+        <button class="btn btn-primary" onclick="crearUsuario()">Crear</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PERÍODO -->
+  <div id="modal-periodo" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-title">📅 Nuevo período</div>
+      <div class="modal-grid">
+        <div class="form-group"><label>Año</label><input id="p-año" type="number" value="2024" /></div>
+        <div class="form-group"><label>N° período</label><input id="p-num" type="number" value="1" /></div>
+      </div>
+      <div class="form-group"><label>Fecha inicio</label><input id="p-inicio" type="date" /></div>
+      <div class="form-group"><label>Fecha fin</label><input id="p-fin" type="date" /></div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeModal('modal-periodo')">Cancelar</button>
+        <button class="btn btn-primary" onclick="crearPeriodo()">Crear</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ESTADO -->
+  <div id="modal-estado" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-title">📌 Nuevo estado</div>
+      <div class="form-group"><label>Nombre</label><input id="e-nombre" type="text" placeholder="Ej: En proceso" />
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeModal('modal-estado')">Cancelar</button>
+        <button class="btn btn-primary" onclick="crearEstado()">Crear</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ÁREA -->
+  <div id="modal-area" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-title">🏢 Nueva área</div>
+      <div class="form-group"><label>Nombre</label><input id="a-nombre" type="text"
+          placeholder="Ej: Secretaría de Obras" /></div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeModal('modal-area')">Cancelar</button>
+        <button class="btn btn-primary" onclick="crearArea()">Crear</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PDF UPLOAD -->
+  <div id="modal-pdf" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-title">📎 Subir PDF</div>
+      <input type="hidden" id="pdf-norma-id" />
+      <label class="upload-zone" for="pdf-file">
+        <span class="icon-big">📄</span>
+        <div>Hacé clic o arrastrá tu PDF</div>
+        <div style="font-size:0.7rem;margin-top:0.25rem;color:var(--text-muted);">Máx. 10 MB</div>
+        <input type="file" id="pdf-file" accept=".pdf" />
+      </label>
+      <div id="pdf-filename" style="margin-top:0.5rem;font-size:0.85rem;color:var(--text-muted);text-align:center;">
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeModal('modal-pdf')">Cancelar</button>
+        <button class="btn btn-primary" onclick="subirPdf()">Subir</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ────────────────────────────────────────────────────────────────
+    //  🧠 CONFIGURACIÓN Y ESTADO
+    // ────────────────────────────────────────────────────────────────
+
+    const CONFIG = {
+      API: 'http://localhost:3000/api',
+      TOAST_DURATION: 4000,
+    };
+
+    let state = {
+      token: localStorage.getItem('token'),
+      user: null,
+      currentSection: 'dashboard',
+    };
+
+    // ────────────────────────────────────────────────────────────────
+    //  🛠 UTILITIES
+    // ────────────────────────────────────────────────────────────────
+
+    const $ = (id) => document.getElementById(id);
+    const $$ = (sel) => document.querySelectorAll(sel);
+    const qs = (sel, ctx = document) => ctx.querySelector(sel);
+
+    const api = async (method, path, body, isFile = false) => {
+      const headers = {};
+      if (state.token) headers['Authorization'] = `Bearer ${state.token}`;
+      if (!isFile) headers['Content-Type'] = 'application/json';
+
+      const opts = { method, headers };
+      if (body) opts.body = isFile ? body : JSON.stringify(body);
+
+      const res = await fetch(`${CONFIG.API}${path}`, opts);
+
+      // Si es 401, logout automático
+      if (res.status === 401) {
+        doLogout();
+        throw new Error('Sesión expirada');
+      }
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || err.message || res.statusText);
+      }
+
+      if (res.status === 204) return null;
+      return res.json();
+    };
+
+    const formatDate = (d) => {
+      if (!d) return '—';
+      return new Date(d).toLocaleDateString('es-AR', { day: '2-digit', month: 'short', year: 'numeric' });
+    };
+
+    const badge = (type, text) => {
+      const map = {
+        'ORDENANZA': 'badge-ordenanza', 'DECRETO': 'badge-decreto',
+        'RESOLUCION': 'badge-resolucion', 'COMUNICACION': 'badge-comunicacion',
+        'ADMIN': 'badge-admin', 'OPERADOR': 'badge-operador',
+        'true': 'badge-vigente', 'false': 'badge-no-vigente',
+        'activo': 'badge-activo', 'inactivo': 'badge-inactivo',
+      };
+      const cls = map[String(type).toUpperCase()] || map[String(type).toLowerCase()] || 'badge-operador';
+      return `<span class="badge ${cls}">${text || type}</span>`;
+    };
+
+    const truncate = (str, max = 40) => {
+      if (!str) return '—';
+      return str.length > max ? str.slice(0, max) + '…' : str;
+    };
+
+    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+    // ────────────────────────────────────────────────────────────────
+    //  🍞 TOAST SYSTEM
+    // ────────────────────────────────────────────────────────────────
+
+    const toast = (message, type = 'info') => {
+      const container = $('toasts');
+      const el = document.createElement('div');
+      el.className = `toast toast-${type}`;
+      el.textContent = message;
+      container.appendChild(el);
+      setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translateX(20px)'; setTimeout(() => el.remove(), 300); }, CONFIG.TOAST_DURATION);
+    };
+
+    // ────────────────────────────────────────────────────────────────
+    //  🔐 AUTH
+    // ────────────────────────────────────────────────────────────────
+
+    const init = () => {
+      if (state.token) {
+        try {
+          const payload = JSON.parse(atob(state.token.split('.')[1]));
+          state.user = payload;
+          $('user-name').textContent = `${payload.rol} · ${payload.email}`;
+          $('login-overlay').style.display = 'none';
+          loadDashboard();
+          return;
+        } catch { doLogout(); }
+      }
+    };
+
+    const doLogin = async () => {
+      const errorEl = $('login-error');
+      errorEl.style.display = 'none';
+      const email = $('login-email').value.trim();
+      const password = $('login-pass').value;
+
+      if (!email || !password) {
+        errorEl.textContent = 'Completá ambos campos';
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      try {
+        const data = await api('POST', '/auth/login', { email, password });
+        state.token = data.token;
+        localStorage.setItem('token', state.token);
+        init();
+        toast('✅ Sesión iniciada correctamente', 'success');
+      } catch (e) {
+        errorEl.textContent = e.message;
+        errorEl.style.display = 'block';
+      }
+    };
+
+    $('login-pass').addEventListener('keydown', (e) => { if (e.key === 'Enter') doLogin(); });
+
+    const doLogout = () => {
+      state.token = null;
+      state.user = null;
+      localStorage.removeItem('token');
+      $('login-overlay').style.display = 'flex';
+      toast('👋 Sesión cerrada', 'info');
+    };
+
+    // ────────────────────────────────────────────────────────────────
+    //  🧭 NAVIGATION
+    // ────────────────────────────────────────────────────────────────
+
+    const navigate = (section) => {
+      state.currentSection = section;
+
+      // Sections
+      $$('.section').forEach(el => el.classList.remove('active'));
+      const target = $(`s-${section}`);
+      if (target) target.classList.add('active');
+
+      // Nav links
+      $$('nav a').forEach(el => el.classList.remove('active'));
+      const navLink = qs(`nav a[data-section="${section}"]`);
+      if (navLink) navLink.classList.add('active');
+
+      // Cerrar mobile menu
+      const sidebar = $('sidebar');
+      if (sidebar.classList.contains('mobile-open')) sidebar.classList.remove('mobile-open');
+
+      // Cargar datos
+      const loaders = {
+        dashboard: loadDashboard,
+        normas: loadNormas,
+        temas: loadTemas,
+        concejales: loadConcejales,
+        bloques: loadBloques,
+        seguimientos: loadSeguimientos,
+        catalogos: loadCatalogos,
+        usuarios: loadUsuarios,
+      };
+      if (loaders[section]) loaders[section]();
+    };
+
+    const toggleMobileMenu = () => {
+      $('sidebar').classList.toggle('mobile-open');
+    };
+
+    // ────────────────────────────────────────────────────────────────
+    //  📦 MODALS
+    // ────────────────────────────────────────────────────────────────
+
+    const openModal = (id) => $(id).classList.add('open');
+    const closeModal = (id) => $(id).classList.remove('open');
+
+    $$('.modal-backdrop').forEach(el => {
+      el.addEventListener('click', (e) => {
+        if (e.target === el) el.classList.remove('open');
+      });
+    });
+
+    // ────────────────────────────────────────────────────────────────
+    //  📊 DASHBOARD
+    // ────────────────────────────────────────────────────────────────
+
+    const loadDashboard = async () => {
+      try {
+        const data = await api('GET', '/admin/stats');
+        $('stat-normas').textContent = data.totalNormas ?? '—';
+        $('stat-concejales').textContent = data.totalConcejales ?? '—';
+        $('stat-temas').textContent = data.totalTemas ?? '—';
+        $('stat-bloques').textContent = data.totalBloques ?? '—';
+
+        const latest = data.ultimasNormas || [];
+        $('latest-normas').innerHTML = latest.length
+          ? latest.map(n => `<tr>
+          <td><code style="background:var(--surface);padding:0.1rem 0.4rem;border-radius:4px;font-size:0.75rem;">${n.codigoNorma || '—'}</code></td>
+          <td>${badge(n.tipo, n.tipo)}</td>
+          <td class="truncate" title="${n.titulo || ''}">${truncate(n.titulo, 50)}</td>
+          <td>${formatDate(n.fechaSancion)}</td>
+        </tr>`).join('')
+          : `<tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:2rem;">No hay normas cargadas</td></tr>`;
+      } catch (e) {
+        console.error(e);
+        toast('Error al cargar dashboard', 'error');
+      }
+    };
+
+    // ────────────────────────────────────────────────────────────────
+    //  📄 NORMAS
+    // ────────────────────────────────────────────────────────────────
+
+    const loadNormas = async () => {
+      const params = new URLSearchParams();
+      const tipo = $('f-tipo').value;
+      const año = $('f-año').value;
+      const vigente = $('f-vigente').value;
+      if (tipo) params.set('tipo', tipo);
+      if (año) params.set('año', año);
+      if (vigente !== '') params.set('vigente', vigente);
+
+      try {
+        const data = await api('GET', `/normas?${params}`);
+        const normas = data.data || data || [];
+        $('normas-list').innerHTML = normas.length
+          ? normas.map(n => `<tr>
+          <td><code style="background:var(--surface);padding:0.1rem 0.4rem;border-radius:4px;font-size:0.75rem;">${n.codigoNorma || '—'}</code></td>
+          <td>${badge(n.tipo, n.tipo)}</td>
+          <td>${n.año || '—'}</td>
+          <td class="truncate" title="${n.titulo || ''}">${truncate(n.titulo, 45)}</td>
+          <td>${badge(String(n.vigente), n.vigente ? 'Vigente' : 'No vigente')}</td>
+          <td>${n.rutaPdf ? `<a href="${n.rutaPdf}" target="_blank" style="color:var(--accent-light);text-decoration:none;">📄 Ver</a>` : `<button class="btn btn-secondary btn-sm" onclick="openPdfModal(${n.id})">Subir</button>`}</td>
+          <td style="text-align:right;"><button class="btn btn-danger btn-sm" onclick="eliminarNorma(${n.id})">🗑</button></td>
+        </tr>`).join('')
+          : `<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:2rem;">No hay normas que coincidan con los filtros</td></tr>`;
+      } catch (e) {
+        toast('Error al cargar normas: ' + e.message, 'error');
+      }
+    };
+
+    const resetFilters = () => {
+      $('f-tipo').value = '';
+      $('f-año').value = '';
+      $('f-vigente').value = '';
+      loadNormas();
+    };
+
+    const crearNorma = async () => {
+      try {
+        const data = {
+          tipo: $('n-tipo').value,
+          origen: $('n-origen').value,
+          numero: parseInt($('n-numero').value),
+          año: parseInt($('n-año').value),
+          titulo: $('n-titulo').value.trim(),
+          fechaSancion: $('n-fecha').value,
+        };
+        if (!data.titulo) throw new Error('El título es obligatorio');
+        if (!data.numero) throw new Error('El número es obligatorio');
+        if (!data.fechaSancion) throw new Error('La fecha es obligatoria');
+
+        await api('POST', '/normas', data);
+        closeModal('modal-norma');
+        toast('✅ Norma creada correctamente', 'success');
+        loadNormas();
+      } catch (e) {
+        toast('Error: ' + e.message, 'error');
+      }
+    };
+
+    const eliminarNorma = async (id) => {
+      if (!confirm('¿Eliminar esta norma permanentemente?')) return;
+      try {
+        await api('DELETE', `/normas/${id}`);
+        toast('✅ Norma eliminada', 'success');
+        loadNormas();
+      } catch (e) {
+        toast('Error: ' + e.message, 'error');
+      }
+    };
+
+    // ────────────────────────────────────────────────────────────────
+    //  📎 PDF UPLOAD
+    // ────────────────────────────────────────────────────────────────
+
+    const openPdfModal = (id) => {
+      $('pdf-norma-id').value = id;
+      $('pdf-filename').textContent = '';
+      $('pdf-file').value = '';
+      openModal('modal-pdf');
+    };
+
+    $('pdf-file').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      $('pdf-filename').textContent = file ? `📎 ${file.name} (${(file.size / 1024).toFixed(1)} KB)` : '';
+    });
+
+    const subirPdf = async () => {
+      const id = $('pdf-norma-id').value;
+      const file = $('pdf-file').files[0];
+      if (!file) { toast('Seleccioná un archivo PDF', 'error'); return; }
+      if (file.type !== 'application/pdf') { toast('Solo se admiten archivos PDF', 'error'); return; }
+
+      const fd = new FormData();
+      fd.append('pdf', file);
+      try {
+        await api('POST', `/normas/${id}/pdf`, fd, true);
+        closeModal('modal-pdf');
+        toast('✅ PDF subido correctamente', 'success');
+        loadNormas();
+      } catch (e) {
+        toast('Error: ' + e.message, 'error');
+      }
+    };
+
+    // ────────────────────────────────────────────────────────────────
+    //  🏷️ TEMAS
+    // ────────────────────────────────────────────────────────────────
+
+    const loadTemas = async () => {
+      try {
+        const data = await api('GET', '/temas');
+        $('temas-list').innerHTML = data.length
+          ? data.map(t => `<tr>
+          <td><code style="background:var(--surface);padding:0.1rem 0.4rem;border-radius:4px;font-size:0.75rem;">${t.id}</code></td>
+          <td>${t.nombre}</td>
+          <td style="text-align:right;"><button class="btn btn-danger btn-sm" onclick="eliminarTema(${t.id})">🗑</button></td>
+        </tr>`).join('')
+          : `<tr><td colspan="3" style="text-align:center;color:var(--text-muted);padding:2rem;">No hay temas cargados</td></tr>`;
+      } catch (e) {
+        toast('Error al cargar temas', 'error');
+      }
+    };
+
+    const crearTema = async () => {
+      const nombre = $('t-nombre').value.trim();
+      if (!nombre) { toast('Ingresá un nombre', 'error'); return; }
+      try {
+        await api('POST', '/temas', { nombre });
+        closeModal('modal-tema');
+        toast('✅ Tema creado', 'success');
+        loadTemas();
+      } catch (e) {
+        toast('Error: ' + e.message, 'error');
+      }
+    };
+
+    const eliminarTema = async (id) => {
+      if (!confirm('¿Eliminar este tema?')) return;
+      try {
+        await api('DELETE', `/temas/${id}`);
+        toast('✅ Tema eliminado', 'success');
+        loadTemas();
+      } catch (e) {
+        toast('Error: ' + e.message, 'error');
+      }
+    };
+
+    // ────────────────────────────────────────────────────────────────
+    //  👤 CONCEJALES
+    // ────────────────────────────────────────────────────────────────
+
+    const loadConcejales = async () => {
+      try {
+        const data = await api('GET', '/concejales');
+        $('concejales-list').innerHTML = data.length
+          ? data.map(c => `<tr>
+          <td><strong>${c.nombre}</strong></td>
+          <td>${c.email || '—'}</td>
+          <td>${c.bloque?.nombre || '—'}</td>
+          <td>${badge(c.activo ? 'activo' : 'inactivo', c.activo ? 'Activo' : 'Inactivo')}</td>
+          <td style="text-align:right;"><button class="btn btn-danger btn-sm" onclick="eliminarConcejal(${c.id})">🗑</button></td>
+        </tr>`).join('')
+          : `<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:2rem;">No hay concejales cargados</td></tr>`;
+      } catch (e) {
+        toast('Error al cargar concejales', 'error');
+      }
+    };
+
+    const crearConcejal = async () => {
+      const nombre = $('c-nombre').value.trim();
+      const email = $('c-email').value.trim();
+      const idBloque = parseInt($('c-bloque').value);
+      if (!nombre) { toast('El nombre es obligatorio', 'error'); return; }
+      if (!idBloque) { toast('Seleccioná un bloque', 'error'); return; }
+      try {
+        await api('POST', '/concejales', { nombre, email, idBloque });
+        closeModal('modal-concejal');
+        toast('✅ Concejal creado', 'success');
+        loadConcejales();
+      } catch (e) {
+        toast('Error: ' + e.message, 'error');
+      }
+    };
+
+    const eliminarConcejal = async (id) => {
+      if (!confirm('¿Eliminar este concejal?')) return;
+      try {
+        await api('DELETE', `/concejales/${id}`);
+        toast('✅ Concejal eliminado', 'success');
+        loadConcejales();
+      } catch (e) {
+        toast('Error: ' + e.message, 'error');
+      }
+    };
+
+    // ────────────────────────────────────────────────────────────────
+    //  🏛️ BLOQUES
+    // ────────────────────────────────────────────────────────────────
+
+    const loadBloques = async () => {
+      try {
+        const data = await api('GET', '/bloques');
+        $('bloques-list').innerHTML = data.length
+          ? data.map(b => `<tr>
+          <td><strong>${b.nombre}</strong></td>
+          <td><code style="background:var(--surface);padding:0.1rem 0.4rem;border-radius:4px;">${b.sigla}</code></td>
+          <td><span style="display:inline-block;width:20px;height:20px;border-radius:6px;background:${b.colorHex || '#666'};border:1px solid var(--border);"></span></td>
+          <td>${b.concejales?.length || 0}</td>
+          <td style="text-align:right;"><button class="btn btn-danger btn-sm" onclick="eliminarBloque(${b.id})">🗑</button></td>
+        </tr>`).join('')
+          : `<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:2rem;">No hay bloques cargados</td></tr>`;
+
+        // Poblar select de bloques en modal concejal
+        const sel = $('c-bloque');
+        sel.innerHTML = data.length
+          ? data.map(b => `<option value="${b.id}">${b.nombre}</option>`).join('')
+          : `<option value="">— Sin bloques —</option>`;
+      } catch (e) {
+        toast('Error al cargar bloques', 'error');
+      }
+    };
+
+    const crearBloque = async () => {
+      const nombre = $('b-nombre').value.trim();
+      const sigla = $('b-sigla').value.trim().toUpperCase();
+      const colorHex = $('b-color').value;
+      if (!nombre) { toast('El nombre es obligatorio', 'error'); return; }
+      if (!sigla) { toast('La sigla es obligatoria', 'error'); return; }
+      try {
+        await api('POST', '/bloques', { nombre, sigla, colorHex });
+        closeModal('modal-bloque');
+        toast('✅ Bloque creado', 'success');
+        loadBloques();
+      } catch (e) {
+        toast('Error: ' + e.message, 'error');
+      }
+    };
+
+    const eliminarBloque = async (id) => {
+      if (!confirm('¿Eliminar este bloque?')) return;
+      try {
+        await api('DELETE', `/bloques/${id}`);
+        toast('✅ Bloque eliminado', 'success');
+        loadBloques();
+      } catch (e) {
+        toast('Error: ' + e.message, 'error');
+      }
+    };
+
+    // ────────────────────────────────────────────────────────────────
+    //  📋 SEGUIMIENTOS
+    // ────────────────────────────────────────────────────────────────
+
+    const loadSeguimientos = async () => {
+      try {
+        const data = await api('GET', '/seguimientos');
+        $('seguimientos-list').innerHTML = data.length
+          ? data.map(s => `<tr>
+          <td>
+            <code style="background:var(--surface);padding:0.1rem 0.4rem;border-radius:4px;font-size:0.75rem;">${s.norma?.codigoNorma || '—'}</code>
+            <div style="font-size:0.7rem;color:var(--text-muted);">${truncate(s.norma?.titulo || '', 35)}</div>
+          </td>
+          <td>${s.area?.nombre || '—'}</td>
+          <td>${badge(s.estado?.nombre || 'pendiente', s.estado?.nombre || 'Pendiente')}</td>
+          <td>${s.periodo?.año || '—'}-${s.periodo?.numeroPeriodo || '—'}</td>
+          <td>${formatDate(s.fechaEvaluacion)}</td>
+          <td style="text-align:right;"><button class="btn btn-danger btn-sm" onclick="eliminarSeg(${s.id})">🗑</button></td>
+        </tr>`).join('')
+          : `<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:2rem;">No hay seguimientos cargados</td></tr>`;
+      } catch (e) {
+        toast('Error al cargar seguimientos', 'error');
+      }
+    };
+
+    const eliminarSeg = async (id) => {
+      if (!confirm('¿Eliminar este seguimiento?')) return;
+      try {
+        await api('DELETE', `/seguimientos/${id}`);
+        toast('✅ Seguimiento eliminado', 'success');
+        loadSeguimientos();
+      } catch (e) {
+        toast('Error: ' + e.message, 'error');
+      }
+    };
+
+    // ────────────────────────────────────────────────────────────────
+    //  ⚙️ CATÁLOGOS
+    // ────────────────────────────────────────────────────────────────
+
+    const loadCatalogos = async () => {
+      try {
+        const [periodos, estados, areas] = await Promise.all([
+          api('GET', '/seguimientos/periodos'),
+          api('GET', '/seguimientos/estados'),
+          api('GET', '/seguimientos/areas'),
+        ]);
+
+        $('periodos-list').innerHTML = (periodos || []).length
+          ? periodos.map(p => `<tr><td>${p.año}</td><td>${p.numeroPeriodo}</td><td>${badge(String(p.vigente), p.vigente ? 'Sí' : 'No')}</td></tr>`).join('')
+          : `<tr><td colspan="3" style="text-align:center;color:var(--text-muted);padding:0.5rem;">—</td></tr>`;
+
+        $('estados-list').innerHTML = (estados || []).length
+          ? estados.map(e => `<tr><td>${e.id}</td><td>${e.nombre}</td></tr>`).join('')
+          : `<tr><td colspan="2" style="text-align:center;color:var(--text-muted);padding:0.5rem;">—</td></tr>`;
+
+        $('areas-list').innerHTML = (areas || []).length
+          ? areas.map(a => `<tr><td>${a.id}</td><td>${a.nombre}</td></tr>`).join('')
+          : `<tr><td colspan="2" style="text-align:center;color:var(--text-muted);padding:0.5rem;">—</td></tr>`;
+      } catch (e) {
+        toast('Error al cargar catálogos', 'error');
+      }
+    };
+
+    const crearPeriodo = async () => {
+      try {
+        const data = {
+          año: parseInt($('p-año').value),
+          numeroPeriodo: parseInt($('p-num').value),
+          fechaInicio: $('p-inicio').value,
+          fechaFin: $('p-fin').value,
+        };
+        if (!data.año || !data.numeroPeriodo) throw new Error('Año y número son obligatorios');
+        await api('POST', '/seguimientos/periodos', data);
+        closeModal('modal-periodo');
+        toast('✅ Período creado', 'success');
+        loadCatalogos();
+      } catch (e) {
+        toast('Error: ' + e.message, 'error');
+      }
+    };
+
+    const crearEstado = async () => {
+      const nombre = $('e-nombre').value.trim();
+      if (!nombre) { toast('Ingresá un nombre', 'error'); return; }
+      try {
+        await api('POST', '/seguimientos/estados', { nombre });
+        closeModal('modal-estado');
+        toast('✅ Estado creado', 'success');
+        loadCatalogos();
+      } catch (e) {
+        toast('Error: ' + e.message, 'error');
+      }
+    };
+
+    const crearArea = async () => {
+      const nombre = $('a-nombre').value.trim();
+      if (!nombre) { toast('Ingresá un nombre', 'error'); return; }
+      try {
+        await api('POST', '/seguimientos/areas', { nombre });
+        closeModal('modal-area');
+        toast('✅ Área creada', 'success');
+        loadCatalogos();
+      } catch (e) {
+        toast('Error: ' + e.message, 'error');
+      }
+    };
+
+    // ────────────────────────────────────────────────────────────────
+    //  🔐 USUARIOS
+    // ────────────────────────────────────────────────────────────────
+
+    const loadUsuarios = async () => {
+      try {
+        const data = await api('GET', '/auth/usuarios');
+        $('usuarios-list').innerHTML = data.length
+          ? data.map(u => `<tr>
+          <td><strong>${u.nombre}</strong></td>
+          <td>${u.email}</td>
+          <td>${badge(u.rol, u.rol)}</td>
+          <td>${badge(u.activo ? 'activo' : 'inactivo', u.activo ? 'Activo' : 'Inactivo')}</td>
+          <td style="text-align:right;"><button class="btn btn-secondary btn-sm" onclick="toggleUsuario(${u.id})">${u.activo ? '⏸' : '▶'}</button></td>
+        </tr>`).join('')
+          : `<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:2rem;">No hay usuarios</td></tr>`;
+      } catch (e) {
+        toast('Error al cargar usuarios', 'error');
+      }
+    };
+
+    const crearUsuario = async () => {
+      try {
+        const data = {
+          nombre: $('u-nombre').value.trim(),
+          email: $('u-email').value.trim(),
+          password: $('u-pass').value,
+          rol: $('u-rol').value,
+        };
+        if (!data.nombre || !data.email || !data.password) throw new Error('Todos los campos son obligatorios');
+        await api('POST', '/auth/usuarios', data);
+        closeModal('modal-usuario');
+        toast('✅ Usuario creado', 'success');
+        loadUsuarios();
+      } catch (e) {
+        toast('Error: ' + e.message, 'error');
+      }
+    };
+
+    const toggleUsuario = async (id) => {
+      try {
+        await api('PATCH', `/auth/usuarios/${id}/toggle`);
+        toast('✅ Estado actualizado', 'success');
+        loadUsuarios();
+      } catch (e) {
+        toast('Error: ' + e.message, 'error');
+      }
+    };
+
+    // ────────────────────────────────────────────────────────────────
+    //  🚀 INICIAR
+    // ────────────────────────────────────────────────────────────────
+
+    init();
+  </script>
+</body>
+
+</html>

@@ -7,7 +7,11 @@
     "strict": true,
     "skipLibCheck": true,
     "sourceMap": true,
-    "rootDir": "./src",
-    "outDir": "./dist"
+    "rootDir": ".",
+    "outDir": "./dist",
+    "resolveJsonModule": true,
+    "declaration": true,
+    "declarationMap": true,
+    "noImplicitAny": false
   }
 }

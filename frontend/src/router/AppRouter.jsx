@@ -12,6 +12,7 @@ import Comisiones from '../pages/Comisiones';
 import Reglamento from '../pages/Reglamento';
 import EnConstruccion from '../pages/EnConstruccion';
 import FloatingSocials from '../components/FloatingSocials';
+import Admin from '../pages/Admin';
 
 // Wrapper to enable route-driven key transitions if needed
 const AnimatedRoutes = () => {
@@ -28,20 +29,32 @@ const AnimatedRoutes = () => {
         <Route path="/reglamento" element={<Reglamento />} />
         <Route path="/tramites" element={<Tramites />} />
         <Route path="/en-construccion" element={<EnConstruccion />} />
+        <Route path="/admin" element={<Admin />} />
       </Routes>
     </AnimatePresence>
+  );
+};
+
+const AppRouterContent = () => {
+  const location = useLocation();
+  const isAdmin = location.pathname.startsWith('/admin');
+
+  return (
+    <>
+      {!isAdmin && <Header />}
+      {!isAdmin && <FloatingSocials />}
+      <div className={isAdmin ? "admin-content-layout" : "main-content-layout"} style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <AnimatedRoutes />
+      </div>
+      {!isAdmin && <Footer />}
+    </>
   );
 };
 
 const AppRouter = () => {
   return (
     <BrowserRouter>
-      <Header />
-      <FloatingSocials />
-      <div className="main-content-layout" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <AnimatedRoutes />
-      </div>
-      <Footer />
+      <AppRouterContent />
     </BrowserRouter>
   );
 };

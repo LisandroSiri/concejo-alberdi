@@ -1,20 +1,181 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
 }
 
-model Concejal {
-  id Int @id @default(autoincrement())
-  nombre String
-  role String
-  createdAt DateTime @default(now())
+
+enum RolUsuario {
+  ADMIN
+  OPERADOR
+  CONCEJAL
+}
+
+enum TipoNorma {
+  ORDENANZA
+  DECRETO
+  RESOLUCION
+  COMUNICACION
+}
+
+enum OrigenNorma {
+  CONCEJO
+  EJECUTIVO
+}
+
+enum EstadoNorma {
+  PRESENTADA
+  VIGENTE
+  PARCIALMENTE_CUMPLIDA
+  CUMPLIDA
+  INCUMPLIDA
+  DEROGADA
+}
+
+// ─── Usuario ──────────────────────────────────────────────────────────────────
+
+model Usuario {
+  id           Int             @id @default(autoincrement())
+  email        String          @unique
+  passwordHash String
+  nombre       String
+  rol          RolUsuario      @default(OPERADOR)
+  activo       Boolean         @default(true)
+  creadoEn     DateTime        @default(now())
+
+  // Solo relevante cuando rol = CONCEJAL
+  idBloque     Int?
+  bloque       BloquePolitico? @relation(fields: [idBloque], references: [id])
+
+  normasAutor  NormaAutor[]
+
+  @@map("usuarios")
+}
+
+// ─── Bloque político ──────────────────────────────────────────────────────────
+
+model BloquePolitico {
+  id       Int       @id @default(autoincrement())
+  nombre   String    @unique
+  sigla    String    @unique
+  colorHex String?
+  activo   Boolean   @default(true)
+
+  usuarios Usuario[]
+
+  @@map("bloques_politicos")
+}
+
+// ─── Área del Ejecutivo ───────────────────────────────────────────────────────
+// Se mantiene como catálogo pero su asignación es opcional en RegistroEstado.
+
+model AreaEjecutivo {
+  id       Int              @id @default(autoincrement())
+  nombre   String           @unique
+
+  registros RegistroEstado[]
+
+  @@map("areas_ejecutivo")
+}
+
+// ─── Norma ────────────────────────────────────────────────────────────────────
+
+model Norma {
+  id           Int      @id @default(autoincrement())
+  numero       Int
+  anio         Int
+  codigoNorma  String
+  tipo         TipoNorma
+  origen       OrigenNorma
+  titulo       String
+  fechaSancion DateTime
+
+  rutaPdf      String?
+  hashPdf      String?
+  vigente      Boolean  @default(true)
+
+  autores      NormaAutor[]
+  temas        NormaTema[]
+  estados      RegistroEstado[]
+
+  @@unique([numero, anio, codigoNorma])
+  @@map("normas")
+}
+
+// ─── Tema ─────────────────────────────────────────────────────────────────────
+
+model Tema {
+  id     Int       @id @default(autoincrement())
+  nombre String    @unique
+
+  normas NormaTema[]
+
+  @@map("temas")
+}
+
+// ─── Período ──────────────────────────────────────────────────────────────────
+// Representa un intervalo semestral. El sistema crea 2 períodos por año.
+
+model Periodo {
+  id            Int    @id @default(autoincrement())
+  anio          Int
+  numeroPeriodo Int
+  fechaInicio   DateTime
+  fechaFin      DateTime
+
+  estados       RegistroEstado[]
+
+  @@unique([anio, numeroPeriodo])
+  @@map("periodos")
+}
+
+// ─── Tablas intermedias ───────────────────────────────────────────────────────
+
+model NormaAutor {
+  id        Int  @id @default(autoincrement())
+  idNorma   Int
+  idUsuario Int
+
+  norma     Norma   @relation(fields: [idNorma], references: [id], onDelete: Cascade)
+  usuario   Usuario @relation(fields: [idUsuario], references: [id], onDelete: Cascade)
+
+  @@unique([idNorma, idUsuario])
+  @@map("normas_autores")
+}
+
+model NormaTema {
+  id      Int  @id @default(autoincrement())
+  idNorma Int
+  idTema  Int
+
+  norma   Norma @relation(fields: [idNorma], references: [id], onDelete: Cascade)
+  tema    Tema  @relation(fields: [idTema], references: [id], onDelete: Cascade)
+
+  @@unique([idNorma, idTema])
+  @@map("normas_temas")
+}
+
+// ─── Estado histórico de una norma ───────────────────────────────────────────
+// "Durante este período, esta norma tenía este estado."
+// Reemplaza: Seguimiento + SeguimientoHistorial + EstadoEjecucion.
+
+model RegistroEstado {
+  id          Int         @id @default(autoincrement())
+  idNorma     Int
+  idPeriodo   Int
+  estado      EstadoNorma
+  observacion String?
+  creadoEn    DateTime    @default(now())
+
+  // Área del Ejecutivo responsable (opcional, no aplica a todas las normas)
+  idArea      Int?
+
+  norma       Norma          @relation(fields: [idNorma], references: [id], onDelete: Cascade)
+  periodo     Periodo        @relation(fields: [idPeriodo], references: [id])
+  area        AreaEjecutivo? @relation(fields: [idArea], references: [id])
+
+  @@index([idNorma, creadoEn])
+  @@map("registros_estado")
 }
