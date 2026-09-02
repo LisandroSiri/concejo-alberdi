@@ -64,6 +64,12 @@ cd ../backend
 pnpm install
 ```
 
+Para configurar las base de datos:
+
+Crear archivo .env
+dentro la varible 
+DATABASE_URL= "DATABASE_URL="postgresql://USUARIO:PASSWORD@localhost:5432/NOMBRE_BASE_DE_DATOS""
+
 Para ejecutar el proyecto:
 
 ```bash

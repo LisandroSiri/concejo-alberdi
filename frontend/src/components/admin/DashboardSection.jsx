@@ -100,7 +100,7 @@ const DashboardSection = ({ api, userRole, badge, formatDate, truncate, showToas
             <tbody>
               {loading ? (
                 <tr>
-                  <td colspan="4" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '2rem' }}>
+                  <td colSpan="4" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '2rem' }}>
                     Cargando...
                   </td>
                 </tr>
@@ -123,7 +123,7 @@ const DashboardSection = ({ api, userRole, badge, formatDate, truncate, showToas
                 ))
               ) : (
                 <tr>
-                  <td colspan="4" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '2rem' }}>
+                  <td colSpan="4" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '2rem' }}>
                     No hay normas cargadas
                   </td>
                 </tr>

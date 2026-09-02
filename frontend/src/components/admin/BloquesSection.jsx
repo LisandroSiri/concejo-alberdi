@@ -92,7 +92,7 @@ const BloquesSection = ({ api, userRole, showToast }) => {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colspan="5" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '2rem' }}>
+                  <td colSpan="5" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '2rem' }}>
                     Cargando...
                   </td>
                 </tr>
@@ -131,7 +131,7 @@ const BloquesSection = ({ api, userRole, showToast }) => {
                 ))
               ) : (
                 <tr>
-                  <td colspan="5" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '2rem' }}>
+                  <td colSpan="5" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '2rem' }}>
                     No hay bloques cargados
                   </td>
                 </tr>

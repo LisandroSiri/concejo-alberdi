@@ -76,7 +76,7 @@ const TemasSection = ({ api, userRole, showToast }) => {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colspan="3" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '2rem' }}>
+                  <td colSpan="3" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '2rem' }}>
                     Cargando...
                   </td>
                 </tr>
@@ -100,7 +100,7 @@ const TemasSection = ({ api, userRole, showToast }) => {
                 ))
               ) : (
                 <tr>
-                  <td colspan="3" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '2rem' }}>
+                  <td colSpan="3" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '2rem' }}>
                     No hay temas cargados
                   </td>
                 </tr>

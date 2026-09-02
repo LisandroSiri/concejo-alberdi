@@ -3,17 +3,19 @@ import { prisma } from '../config/prisma';
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
+import { AuthRequest } from '../middleware/auth';
 
 const UPLOADS_DIR = path.join(process.cwd(), 'uploads');
 
 // ─── LISTAR con filtros ────────────────────────────────────────────────────────
 export const listarNormas = async (req: Request, res: Response): Promise<void> => {
-  const { tipo, anio, origen, temaId, autorId, vigente, page = '1', limit = '20' } = req.query;
+  const { tipo, anio, año, origen, temaId, autorId, vigente, page = '1', limit = '20' } = req.query;
 
   const where: Record<string, unknown> = {};
   if (tipo) where.tipo = tipo;
   if (origen) where.origen = origen;
-  if (anio) where.anio = Number(anio);
+  const anioFiltro = anio ?? año;
+  if (anioFiltro) where.anio = Number(anioFiltro);
   if (vigente !== undefined) where.vigente = vigente === 'true';
   if (temaId) where.temas = { some: { idTema: Number(temaId) } };
   if (autorId) where.autores = { some: { idUsuario: Number(autorId) } };
@@ -56,30 +58,48 @@ export const obtenerNorma = async (req: Request, res: Response): Promise<void> =
 };
 
 // ─── CREAR norma (sin PDF) ────────────────────────────────────────────────────
-export const crearNorma = async (req: Request, res: Response): Promise<void> => {
-  const { numero, anio, tipo, origen, titulo, fechaSancion, vigente, autorIds, temaIds } = req.body;
-  const codigoNorma = `${tipo}-${numero}-${anio}`;
+export const crearNorma = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const { numero, anio, año, tipo, origen, titulo, fechaSancion, vigente, autorIds, temaIds } = req.body;
+    const valorAnio = Number(anio ?? año);
+    const codigoNorma = `${tipo}-${numero}-${valorAnio}`;
 
-  const norma = await prisma.norma.create({
-    data: {
-      numero: Number(numero),
-      anio: Number(anio),
-      codigoNorma,
-      tipo,
-      origen,
-      titulo,
-      fechaSancion: new Date(fechaSancion),
-      vigente: vigente !== false,
-      autores: autorIds?.length
-        ? { create: autorIds.map((id: number) => ({ idUsuario: Number(id) })) }
-        : undefined,
-      temas: temaIds?.length
-        ? { create: temaIds.map((id: number) => ({ idTema: Number(id) })) }
-        : undefined,
-    },
-    include: { autores: true, temas: true },
-  });
-  res.status(201).json(norma);
+    // Si se envían autorIds en el body, se usan esos.
+    // Si no se envían, se asocia automáticamente el usuario autenticado que creó la norma.
+    let idsAutores: number[] = [];
+    if (Array.isArray(autorIds) && autorIds.length > 0) {
+      idsAutores = autorIds.map(Number);
+    } else if (req.usuario?.id) {
+      idsAutores = [req.usuario.id];
+    }
+
+    const norma = await prisma.norma.create({
+      data: {
+        numero: Number(numero),
+        anio: valorAnio,
+        codigoNorma,
+        tipo,
+        origen,
+        titulo,
+        fechaSancion: new Date(fechaSancion),
+        vigente: vigente !== false,
+        autores: idsAutores.length
+          ? { create: idsAutores.map((idUsuario: number) => ({ idUsuario })) }
+          : undefined,
+        temas: temaIds?.length
+          ? { create: temaIds.map((id: number) => ({ idTema: Number(id) })) }
+          : undefined,
+      },
+      include: {
+        autores: { include: { usuario: { select: { id: true, nombre: true, email: true, rol: true } } } },
+        temas: { include: { tema: true } },
+      },
+    });
+    res.status(201).json(norma);
+  } catch (error: any) {
+    console.error('Error al crear norma:', error);
+    res.status(500).json({ error: error.message || 'Error al crear norma' });
+  }
 };
 
 // ─── ACTUALIZAR norma ─────────────────────────────────────────────────────────

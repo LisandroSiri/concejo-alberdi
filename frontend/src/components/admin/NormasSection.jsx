@@ -28,7 +28,7 @@ const NormasSection = ({ api, userRole, badge, showToast }) => {
     setLoading(true);
     const params = new URLSearchParams();
     if (fTipo) params.set('tipo', fTipo);
-    if (fAno) params.set('año', fAno);
+    if (fAno) params.set('anio', fAno);
     if (fVigente !== '') params.set('vigente', fVigente);
 
     try {
@@ -59,7 +59,7 @@ const NormasSection = ({ api, userRole, badge, showToast }) => {
         tipo: nTipo,
         origen: nOrigen,
         numero: parseInt(nNumero),
-        año: parseInt(nAno),
+        anio: parseInt(nAno),
         titulo: nTitulo.trim(),
         fechaSancion: nFecha,
       };
@@ -182,9 +182,10 @@ const NormasSection = ({ api, userRole, badge, showToast }) => {
               <tr>
                 <th>Código</th>
                 <th>Tipo</th>
-                <th>Año</th>
+                <th>Fecha presentación</th>
                 <th>Título</th>
-                <th>Vigente</th>
+                <th>Presentado</th>
+                <th>Estado</th>
                 <th>PDF</th>
                 <th style={{ textAlign: 'right' }}>Acciones</th>
               </tr>
@@ -192,7 +193,7 @@ const NormasSection = ({ api, userRole, badge, showToast }) => {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colspan="7" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '2rem' }}>
+                  <td colSpan="7" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '2rem' }}>
                     Cargando...
                   </td>
                 </tr>
@@ -207,10 +208,11 @@ const NormasSection = ({ api, userRole, badge, showToast }) => {
                     <td>
                       <span dangerouslySetInnerHTML={{ __html: badge(n.tipo, n.tipo) }} />
                     </td>
-                    <td>{n.año || '—'}</td>
+                   <td> {n.fechaSancion  ? n.fechaSancion.split('T')[0].split('-').reverse().join('/')  : '—'}</td>
                     <td className="truncate" title={n.titulo || ''}>
                       {n.titulo}
                     </td>
+                    <td>{n.autores?.[0]?.usuario?.nombre + ' (' + n.autores?.[0]?.usuario?.bloque?.nombre + ')' || '—'}</td>
                     <td>
                       <span dangerouslySetInnerHTML={{ __html: badge(String(n.vigente), n.vigente ? 'Vigente' : 'No vigente') }} />
                     </td>
@@ -236,7 +238,7 @@ const NormasSection = ({ api, userRole, badge, showToast }) => {
                 ))
               ) : (
                 <tr>
-                  <td colspan="7" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '2rem' }}>
+                  <td colSpan="7" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '2rem' }}>
                     No hay normas que coincidan con los filtros
                   </td>
                 </tr>

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 
 const UsuariosSection = ({ api, userRole, badge, showToast }) => {
   const [usuarios, setUsuarios] = useState([]);
+  const [bloques, setBloques] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
@@ -16,8 +17,12 @@ const UsuariosSection = ({ api, userRole, badge, showToast }) => {
     if (userRole !== 'ADMIN') return;
     setLoading(true);
     try {
-      const data = await api('GET', '/auth/usuarios');
-      setUsuarios(data || []);
+      const [usuariosData, bloquesData] = await Promise.all([
+        api('GET', '/auth/usuarios'),
+        api('GET', '/bloques'),
+      ]);
+      setUsuarios(usuariosData || []);
+      setBloques(bloquesData || []);
     } catch (e) {
       showToast('Error al cargar usuarios', 'error');
     } finally {
@@ -35,20 +40,25 @@ const UsuariosSection = ({ api, userRole, badge, showToast }) => {
     const email = uEmail.trim();
     const password = uPass;
     const rol = uRol;
-    const block = uBlo;
+    const idBloque = rol === 'CONCEJAL' && uBlo ? parseInt(uBlo) : undefined;
 
     if (!nombre || !email || !password) {
       showToast('Todos los campos son obligatorios', 'error');
       return;
     }
+    if (rol === 'CONCEJAL' && !idBloque) {
+      showToast('Seleccioná un bloque para el concejal', 'error');
+      return;
+    }
 
     try {
-      await api('POST', '/auth/usuarios', { nombre, email, password, rol });
+      await api('POST', '/auth/usuarios', { nombre, email, password, rol, idBloque });
       setIsCreateModalOpen(false);
       setUNombre('');
       setUEmail('');
       setUPass('');
       setURol('OPERADOR');
+      setUBlo('');
       showToast('✅ Usuario creado', 'success');
       loadUsuarios();
     } catch (e) {
@@ -106,7 +116,7 @@ const UsuariosSection = ({ api, userRole, badge, showToast }) => {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colspan="5" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '2rem' }}>
+                  <td colSpan="5" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '2rem' }}>
                     Cargando...
                   </td>
                 </tr>
@@ -132,7 +142,7 @@ const UsuariosSection = ({ api, userRole, badge, showToast }) => {
                 ))
               ) : (
                 <tr>
-                  <td colspan="5" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '2rem' }}>
+                  <td colSpan="5" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '2rem' }}>
                     No hay usuarios
                   </td>
                 </tr>
@@ -185,7 +195,14 @@ const UsuariosSection = ({ api, userRole, badge, showToast }) => {
                   <option value="ADMIN">Administrador</option>
                 </select>
                 {uRol === 'CONCEJAL' && (
-                  <select value={uBlo}
+                  <select value={uBlo} onChange={(e) => setUBlo(e.target.value)} required>
+                    <option value="">— Seleccionar bloque —</option>
+                    {bloques.map((b) => (
+                      <option key={b.id} value={b.id}>
+                        {b.nombre}
+                      </option>
+                    ))}
+                  </select>
                 )}
               </div>
               <div className="modal-actions">
