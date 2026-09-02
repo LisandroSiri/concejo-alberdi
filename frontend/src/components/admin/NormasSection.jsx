@@ -212,7 +212,7 @@ const NormasSection = ({ api, userRole, badge, showToast }) => {
                     <td className="truncate" title={n.titulo || ''}>
                       {n.titulo}
                     </td>
-                    <td>{n.autores?.[0]?.usuario?.nombre + ' (' + n.autores?.[0]?.usuario?.bloque?.nombre + ')' || '—'}</td>
+                    <td>{n.autores?.[0]?.usuario?.nombre + ' (' + n.autores?.[0]?.usuario?.bloque?.sigla + ')' || '—'}</td>
                     <td>
                       <span dangerouslySetInnerHTML={{ __html: badge(String(n.vigente), n.vigente ? 'Vigente' : 'No vigente') }} />
                     </td>
