@@ -76,7 +76,7 @@ const TemasSection = ({ api, userRole, showToast }) => {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="3" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '2rem' }}>
+                  <td colSpan="3" style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '2rem' }}>
                     Cargando...
                   </td>
                 </tr>
@@ -84,7 +84,7 @@ const TemasSection = ({ api, userRole, showToast }) => {
                 temas.map((t) => (
                   <tr key={t.id}>
                     <td>
-                      <code style={{ background: 'var(--admin-surface)', padding: '0.1rem 0.4rem', borderRadius: '4px', fontSize: '0.75rem' }}>
+                      <code style={{ background: 'var(--primary-light)', color: 'var(--primary)', padding: '0.15rem 0.45rem', borderRadius: 'var(--radius-sm)', fontSize: '0.75rem', fontWeight: 600 }}>
                         {t.id}
                       </code>
                     </td>
@@ -100,7 +100,7 @@ const TemasSection = ({ api, userRole, showToast }) => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="3" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '2rem' }}>
+                  <td colSpan="3" style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '2rem' }}>
                     No hay temas cargados
                   </td>
                 </tr>
@@ -116,9 +116,10 @@ const TemasSection = ({ api, userRole, showToast }) => {
             <div className="modal-title">🏷️ Nuevo tema</div>
             <form onSubmit={handleCrearTema}>
               <div className="form-group">
-                <label>Nombre del tema</label>
+                <label className="form-label">Nombre del tema</label>
                 <input
                   type="text"
+                  className="form-input"
                   placeholder="Ej: Obras Públicas"
                   value={tNombre}
                   onChange={(e) => setTNombre(e.target.value)}

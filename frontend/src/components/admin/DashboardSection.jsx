@@ -75,8 +75,8 @@ const DashboardSection = ({ api, userRole, badge, formatDate, truncate, showToas
         </div>
       ) : (
         <div className="stat-card" style={{ marginBottom: '2rem', padding: '1.5rem' }}>
-          <div className="label" style={{ color: 'var(--admin-yellow)' }}>Modo Operador</div>
-          <p style={{ marginTop: '0.5rem', color: 'var(--admin-text-secondary)', fontSize: '0.85rem' }}>
+          <div className="label" style={{ color: 'var(--warning)' }}>Modo Operador</div>
+          <p style={{ marginTop: '0.5rem', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
             Tenés acceso de lectura y escritura para la gestión de normas, concejales y catálogos. 
             El panel de estadísticas globales requiere privilegios de Administrador.
           </p>
@@ -100,7 +100,7 @@ const DashboardSection = ({ api, userRole, badge, formatDate, truncate, showToas
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="4" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '2rem' }}>
+                  <td colSpan="4" style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '2rem' }}>
                     Cargando...
                   </td>
                 </tr>
@@ -108,7 +108,7 @@ const DashboardSection = ({ api, userRole, badge, formatDate, truncate, showToas
                 latestNormas.map((n) => (
                   <tr key={n.id || n.codigoNorma}>
                     <td>
-                      <code style={{ background: 'var(--admin-surface)', padding: '0.1rem 0.4rem', borderRadius: '4px', fontSize: '0.75rem' }}>
+                      <code style={{ background: 'var(--primary-light)', color: 'var(--primary)', padding: '0.15rem 0.45rem', borderRadius: 'var(--radius-sm)', fontSize: '0.75rem', fontWeight: 600 }}>
                         {n.codigoNorma || '—'}
                       </code>
                     </td>
@@ -123,7 +123,7 @@ const DashboardSection = ({ api, userRole, badge, formatDate, truncate, showToas
                 ))
               ) : (
                 <tr>
-                  <td colSpan="4" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '2rem' }}>
+                  <td colSpan="4" style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '2rem' }}>
                     No hay normas cargadas
                   </td>
                 </tr>

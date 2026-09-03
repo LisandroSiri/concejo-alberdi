@@ -82,7 +82,7 @@ const UsuariosSection = ({ api, userRole, badge, showToast }) => {
         <div className="page-header">
           <div className="page-title">Acceso Denegado</div>
         </div>
-        <div className="stat-card" style={{ padding: '2rem', borderLeft: '4px solid var(--admin-red)' }}>
+        <div className="stat-card" style={{ padding: '2rem', borderLeft: '4px solid var(--danger)' }}>
           <p>No tenés los permisos necesarios para gestionar usuarios. Esta sección requiere el rol ADMIN.</p>
         </div>
       </div>
@@ -116,7 +116,7 @@ const UsuariosSection = ({ api, userRole, badge, showToast }) => {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="5" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '2rem' }}>
+                  <td colSpan="5" style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '2rem' }}>
                     Cargando...
                   </td>
                 </tr>
@@ -142,7 +142,7 @@ const UsuariosSection = ({ api, userRole, badge, showToast }) => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="5" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '2rem' }}>
+                  <td colSpan="5" style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '2rem' }}>
                     No hay usuarios
                   </td>
                 </tr>
@@ -158,9 +158,10 @@ const UsuariosSection = ({ api, userRole, badge, showToast }) => {
             <div className="modal-title">🔐 Nuevo usuario</div>
             <form onSubmit={handleCrearUsuario}>
               <div className="form-group">
-                <label>Nombre</label>
+                <label className="form-label">Nombre</label>
                 <input
                   type="text"
+                  className="form-input"
                   placeholder="Nombre"
                   value={uNombre}
                   onChange={(e) => setUNombre(e.target.value)}
@@ -168,9 +169,10 @@ const UsuariosSection = ({ api, userRole, badge, showToast }) => {
                 />
               </div>
               <div className="form-group">
-                <label>Email</label>
+                <label className="form-label">Email</label>
                 <input
                   type="email"
+                  className="form-input"
                   placeholder="usuario@concejo.gob.ar"
                   value={uEmail}
                   onChange={(e) => setUEmail(e.target.value)}
@@ -178,9 +180,10 @@ const UsuariosSection = ({ api, userRole, badge, showToast }) => {
                 />
               </div>
               <div className="form-group">
-                <label>Contraseña</label>
+                <label className="form-label">Contraseña</label>
                 <input
                   type="password"
+                  className="form-input"
                   placeholder="••••••••"
                   value={uPass}
                   onChange={(e) => setUPass(e.target.value)}
@@ -188,14 +191,14 @@ const UsuariosSection = ({ api, userRole, badge, showToast }) => {
                 />
               </div>
               <div className="form-group">
-                <label>Rol</label>
-                <select value={uRol} onChange={(e) => setURol(e.target.value)} required>
+                <label className="form-label">Rol</label>
+                <select className="form-input" value={uRol} onChange={(e) => setURol(e.target.value)} required>
                   <option value="OPERADOR">Operador</option>
                   <option value="CONCEJAL">Concejal</option>
                   <option value="ADMIN">Administrador</option>
                 </select>
                 {uRol === 'CONCEJAL' && (
-                  <select value={uBlo} onChange={(e) => setUBlo(e.target.value)} required>
+                  <select className="form-input" style={{ marginTop: '0.5rem' }} value={uBlo} onChange={(e) => setUBlo(e.target.value)} required>
                     <option value="">— Seleccionar bloque —</option>
                     {bloques.map((b) => (
                       <option key={b.id} value={b.id}>
