@@ -10,6 +10,7 @@ import bloqueRoutes from './routes/bloque.routes';
 import periodoRoutes from './routes/periodo.routes';
 import registroEstadoRoutes from './routes/registro-estado.routes';
 import adminRoutes from './routes/admin.routes';
+import youtubeRoutes from './routes/youtube.routes';
 
 const app = express();
 
@@ -28,6 +29,8 @@ app.use('/api/bloques', bloqueRoutes);
 app.use('/api/periodos', periodoRoutes);
 app.use('/api/registros-estado', registroEstadoRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/youtube', youtubeRoutes);
+
 
 
 
