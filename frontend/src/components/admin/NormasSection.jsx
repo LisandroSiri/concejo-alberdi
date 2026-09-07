@@ -193,7 +193,7 @@ const NormasSection = ({ api, userRole, badge, showToast }) => {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="7" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '2rem' }}>
+                  <td colSpan="8" style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '2rem' }}>
                     Cargando...
                   </td>
                 </tr>
@@ -201,7 +201,7 @@ const NormasSection = ({ api, userRole, badge, showToast }) => {
                 normas.map((n) => (
                   <tr key={n.id}>
                     <td>
-                      <code style={{ background: 'var(--admin-surface)', padding: '0.1rem 0.4rem', borderRadius: '4px', fontSize: '0.75rem' }}>
+                      <code style={{ background: 'var(--primary-light)', color: 'var(--primary)', padding: '0.15rem 0.45rem', borderRadius: 'var(--radius-sm)', fontSize: '0.75rem', fontWeight: 600 }}>
                         {n.codigoNorma || '—'}
                       </code>
                     </td>
@@ -218,7 +218,7 @@ const NormasSection = ({ api, userRole, badge, showToast }) => {
                     </td>
                     <td>
                       {n.rutaPdf ? (
-                        <a href={n.rutaPdf} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--admin-accent-light)', textDecoration: 'none' }}>
+                        <a href={n.rutaPdf} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 600 }}>
                           📄 Ver
                         </a>
                       ) : (
@@ -238,7 +238,7 @@ const NormasSection = ({ api, userRole, badge, showToast }) => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="7" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '2rem' }}>
+                  <td colSpan="8" style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '2rem' }}>
                     No hay normas que coincidan con los filtros
                   </td>
                 </tr>
@@ -256,8 +256,8 @@ const NormasSection = ({ api, userRole, badge, showToast }) => {
             <form onSubmit={handleCrearNorma}>
               <div className="modal-grid">
                 <div className="form-group">
-                  <label>Tipo</label>
-                  <select value={nTipo} onChange={(e) => setNTipo(e.target.value)}>
+                  <label className="form-label">Tipo</label>
+                  <select className="form-input" value={nTipo} onChange={(e) => setNTipo(e.target.value)}>
                     <option value="ORDENANZA">ORDENANZA</option>
                     <option value="DECRETO">DECRETO</option>
                     <option value="RESOLUCION">RESOLUCION</option>
@@ -265,25 +265,26 @@ const NormasSection = ({ api, userRole, badge, showToast }) => {
                   </select>
                 </div>
                 <div className="form-group">
-                  <label>Origen</label>
-                  <select value={nOrigen} onChange={(e) => setNOrigen(e.target.value)}>
+                  <label className="form-label">Origen</label>
+                  <select className="form-input" value={nOrigen} onChange={(e) => setNOrigen(e.target.value)}>
                     <option value="CONCEJO">CONCEJO</option>
                     <option value="EJECUTIVO">EJECUTIVO</option>
                   </select>
                 </div>
                 <div className="form-group">
-                  <label>Número</label>
-                  <input type="number" min="1" value={nNumero} onChange={(e) => setNNumero(e.target.value)} required />
+                  <label className="form-label">Número</label>
+                  <input className="form-input" type="number" min="1" value={nNumero} onChange={(e) => setNNumero(e.target.value)} required />
                 </div>
                 <div className="form-group">
-                  <label>Año</label>
-                  <input type="number" value={nAno} onChange={(e) => setNAno(e.target.value)} required />
+                  <label className="form-label">Año</label>
+                  <input className="form-input" type="number" value={nAno} onChange={(e) => setNAno(e.target.value)} required />
                 </div>
               </div>
               <div className="form-group">
-                <label>Título</label>
+                <label className="form-label">Título</label>
                 <input
                   type="text"
+                  className="form-input"
                   placeholder="Título de la norma"
                   value={nTitulo}
                   onChange={(e) => setNTitulo(e.target.value)}
@@ -291,8 +292,8 @@ const NormasSection = ({ api, userRole, badge, showToast }) => {
                 />
               </div>
               <div className="form-group">
-                <label>Fecha de sanción</label>
-                <input type="date" value={nFecha} onChange={(e) => setNFecha(e.target.value)} required />
+                <label className="form-label">Fecha de sanción</label>
+                <input className="form-input" type="date" value={nFecha} onChange={(e) => setNFecha(e.target.value)} required />
               </div>
               <div className="modal-actions">
                 <button type="button" className="btn btn-secondary" onClick={() => setIsCreateModalOpen(false)}>
@@ -316,12 +317,12 @@ const NormasSection = ({ api, userRole, badge, showToast }) => {
               <label className="upload-zone" htmlFor="pdf-file-input">
                 <span className="icon-big">📄</span>
                 <div>Hacé clic para seleccionar tu PDF</div>
-                <div style={{ fontSize: '0.7rem', marginTop: '0.25rem', color: 'var(--admin-text-muted)' }}>
+                <div style={{ fontSize: '0.75rem', marginTop: '0.25rem', color: 'var(--text-muted)' }}>
                   Máx. 10 MB
                 </div>
                 <input id="pdf-file-input" type="file" accept=".pdf" onChange={handleFileChange} style={{ display: 'none' }} />
               </label>
-              <div style={{ marginTop: '0.5rem', fontSize: '0.85rem', color: 'var(--admin-text-muted)', textAlign: 'center' }}>
+              <div style={{ marginTop: '0.5rem', fontSize: '0.85rem', color: 'var(--text-muted)', textAlign: 'center' }}>
                 {pdfFilename}
               </div>
               <div className="modal-actions">

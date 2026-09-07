@@ -112,7 +112,7 @@ const ConcejalesSection = ({ api, userRole, badge, showToast }) => {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="5" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '2rem' }}>
+                  <td colSpan="5" style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '2rem' }}>
                     Cargando...
                   </td>
                 </tr>
@@ -141,7 +141,7 @@ const ConcejalesSection = ({ api, userRole, badge, showToast }) => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="5" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '2rem' }}>
+                  <td colSpan="5" style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '2rem' }}>
                     No hay concejales cargados
                   </td>
                 </tr>
@@ -157,9 +157,10 @@ const ConcejalesSection = ({ api, userRole, badge, showToast }) => {
             <div className="modal-title">👤 Nuevo concejal</div>
             <form onSubmit={handleCrearConcejal}>
               <div className="form-group">
-                <label>Nombre completo</label>
+                <label className="form-label">Nombre completo</label>
                 <input
                   type="text"
+                  className="form-input"
                   placeholder="Nombre Apellido"
                   value={cNombre}
                   onChange={(e) => setCNombre(e.target.value)}
@@ -167,9 +168,10 @@ const ConcejalesSection = ({ api, userRole, badge, showToast }) => {
                 />
               </div>
               <div className="form-group">
-                <label>Email</label>
+                <label className="form-label">Email</label>
                 <input
                   type="email"
+                  className="form-input"
                   placeholder="concejal@concejo.gob.ar"
                   value={cEmail}
                   onChange={(e) => setCEmail(e.target.value)}
@@ -177,9 +179,10 @@ const ConcejalesSection = ({ api, userRole, badge, showToast }) => {
                 />
               </div>
               <div className="form-group">
-                <label>Contraseña inicial</label>
+                <label className="form-label">Contraseña inicial</label>
                 <input
                   type="password"
+                  className="form-input"
                   placeholder="Contraseña"
                   value={cPassword}
                   onChange={(e) => setCPassword(e.target.value)}
@@ -187,8 +190,8 @@ const ConcejalesSection = ({ api, userRole, badge, showToast }) => {
                 />
               </div>
               <div className="form-group">
-                <label>Bloque</label>
-                <select value={cBloque} onChange={(e) => setCBloque(e.target.value)} required>
+                <label className="form-label">Bloque</label>
+                <select className="form-input" value={cBloque} onChange={(e) => setCBloque(e.target.value)} required>
                   {bloques.length ? (
                     bloques.map((b) => (
                       <option key={b.id} value={b.id}>

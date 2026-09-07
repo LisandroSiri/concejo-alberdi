@@ -92,7 +92,7 @@ const BloquesSection = ({ api, userRole, showToast }) => {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="5" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '2rem' }}>
+                  <td colSpan="5" style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '2rem' }}>
                     Cargando...
                   </td>
                 </tr>
@@ -103,7 +103,7 @@ const BloquesSection = ({ api, userRole, showToast }) => {
                       <strong>{b.nombre}</strong>
                     </td>
                     <td>
-                      <code style={{ background: 'var(--admin-surface)', padding: '0.1rem 0.4rem', borderRadius: '4px' }}>
+                      <code style={{ background: 'var(--primary-light)', color: 'var(--primary)', padding: '0.15rem 0.45rem', borderRadius: 'var(--radius-sm)', fontWeight: 600 }}>
                         {b.sigla}
                       </code>
                     </td>
@@ -115,7 +115,7 @@ const BloquesSection = ({ api, userRole, showToast }) => {
                           height: '20px',
                           borderRadius: '6px',
                           background: b.colorHex || '#666',
-                          border: '1px solid var(--admin-border)',
+                          border: '1px solid var(--border)',
                         }}
                       />
                     </td>
@@ -131,7 +131,7 @@ const BloquesSection = ({ api, userRole, showToast }) => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="5" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '2rem' }}>
+                  <td colSpan="5" style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '2rem' }}>
                     No hay bloques cargados
                   </td>
                 </tr>
@@ -147,9 +147,10 @@ const BloquesSection = ({ api, userRole, showToast }) => {
             <div className="modal-title">🏛️ Nuevo bloque</div>
             <form onSubmit={handleCrearBloque}>
               <div className="form-group">
-                <label>Nombre</label>
+                <label className="form-label">Nombre</label>
                 <input
                   type="text"
+                  className="form-input"
                   placeholder="Ej: Unión por Alberdi"
                   value={bNombre}
                   onChange={(e) => setBNombre(e.target.value)}
@@ -157,9 +158,10 @@ const BloquesSection = ({ api, userRole, showToast }) => {
                 />
               </div>
               <div className="form-group">
-                <label>Sigla</label>
+                <label className="form-label">Sigla</label>
                 <input
                   type="text"
+                  className="form-input"
                   placeholder="UPA"
                   style={{ textTransform: 'uppercase' }}
                   value={bSigla}
@@ -168,7 +170,7 @@ const BloquesSection = ({ api, userRole, showToast }) => {
                 />
               </div>
               <div className="form-group">
-                <label>Color</label>
+                <label className="form-label">Color</label>
                 <input
                   type="color"
                   value={bColor}

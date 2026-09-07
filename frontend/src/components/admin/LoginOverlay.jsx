@@ -30,17 +30,14 @@ const LoginOverlay = ({ api, onLoginSuccess }) => {
   };
 
   return (
-    <div id="login-overlay" className="modal-backdrop open" style={{ background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)' }}>
-      <div className="modal" style={{ maxWidth: '360px' }}>
+    <div id="login-overlay" className="modal-backdrop open">
+      <div className="modal" style={{ maxWidth: '380px' }}>
         <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
           <div style={{ fontSize: '2rem', marginBottom: '0.25rem' }}>⚖</div>
-          <h2 style={{ fontSize: '1.3rem', fontWeight: 700 }}>
-            Panel{' '}
-            <span style={{ background: 'linear-gradient(to right, var(--admin-accent), var(--admin-accent2))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-              Admin
-            </span>
+          <h2 style={{ fontSize: '1.3rem', fontWeight: 700, color: 'var(--text-main)' }}>
+            Panel Admin
           </h2>
-          <p style={{ color: 'var(--admin-text-muted)', fontSize: '0.8rem', marginTop: '0.25rem' }}>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: '0.25rem' }}>
             Concejo Deliberante de Alberdi
           </p>
         </div>
@@ -53,9 +50,10 @@ const LoginOverlay = ({ api, onLoginSuccess }) => {
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label>Email</label>
+            <label className="form-label">Email</label>
             <input
               type="email"
+              className="form-input"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="admin@concejo.gob.ar"
@@ -63,9 +61,10 @@ const LoginOverlay = ({ api, onLoginSuccess }) => {
             />
           </div>
           <div className="form-group">
-            <label>Contraseña</label>
+            <label className="form-label">Contraseña</label>
             <input
               type="password"
+              className="form-input"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
@@ -75,14 +74,14 @@ const LoginOverlay = ({ api, onLoginSuccess }) => {
           <button
             type="submit"
             className="btn btn-primary"
-            style={{ width: '100%', justifyContent: 'center', padding: '0.7rem' }}
+            style={{ width: '100%', justifyContent: 'center', padding: '0.75rem' }}
             disabled={loading}
           >
             {loading ? 'Iniciando sesión...' : 'Iniciar sesión'}
           </button>
         </form>
 
-        <p style={{ textAlign: 'center', fontSize: '0.7rem', color: 'var(--admin-text-muted)', marginTop: '1rem' }}>
+        <p style={{ textAlign: 'center', fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '1.25rem' }}>
           Credenciales por defecto: admin@concejo.gob.ar / admin123
         </p>
       </div>

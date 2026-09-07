@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './Admin.css';
+import logoConsejo from '../assets/logo-consejo.jpg';
 
 // Import subcomponents
 import LoginOverlay from '../components/admin/LoginOverlay';
@@ -192,8 +193,13 @@ const Admin = () => {
             ☰
           </button>
           <div className="brand">
-            <div className="brand-icon">⚖</div>
-            <span>Concejo Alberdi</span>
+            <div className="logo-icon-wrapper">
+              <img src={logoConsejo} alt="Honorable Concejo Deliberante" className="header-logo-img" />
+            </div>
+            <div className="brand-text">
+              <span className="brand-title serif-title">Concejo Deliberante</span>
+              <span className="brand-subtitle">Portal Oficial Legislativo</span>
+            </div>
           </div>
         </div>
         <div className="header-actions">
@@ -272,7 +278,7 @@ const Admin = () => {
           )}
 
           <div className="nav-spacer"></div>
-          <span style={{ fontSize: '0.6rem', color: 'var(--admin-text-muted)', padding: '0.75rem' }}>
+          <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', padding: '0.75rem' }}>
             v1.0.0 (React Migrated)
           </span>
         </nav>

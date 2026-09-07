@@ -130,7 +130,7 @@ const CatalogosSection = ({ api, badge, showToast }) => {
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan="4" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '1rem' }}>
+                    <td colSpan="4" style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '1rem' }}>
                       ...
                     </td>
                   </tr>
@@ -139,13 +139,13 @@ const CatalogosSection = ({ api, badge, showToast }) => {
                     <tr key={`${p.anio}-${p.numeroPeriodo}`}>
                       <td>{p.anio}</td>
                       <td>{p.numeroPeriodo}</td>
-                      <td style={{ fontSize: '0.8rem' }}>{p.fechaInicio ? new Date(p.fechaInicio).toLocaleDateString('es-AR') : '—'}</td>
-                      <td style={{ fontSize: '0.8rem' }}>{p.fechaFin ? new Date(p.fechaFin).toLocaleDateString('es-AR') : '—'}</td>
+                      <td style={{ fontSize: '0.85rem' }}>{p.fechaInicio ? new Date(p.fechaInicio).toLocaleDateString('es-AR') : '—'}</td>
+                      <td style={{ fontSize: '0.85rem' }}>{p.fechaFin ? new Date(p.fechaFin).toLocaleDateString('es-AR') : '—'}</td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="4" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '1rem' }}>
+                    <td colSpan="4" style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '1rem' }}>
                       —
                     </td>
                   </tr>
@@ -174,7 +174,7 @@ const CatalogosSection = ({ api, badge, showToast }) => {
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan="2" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '1rem' }}>
+                    <td colSpan="2" style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '1rem' }}>
                       ...
                     </td>
                   </tr>
@@ -187,7 +187,7 @@ const CatalogosSection = ({ api, badge, showToast }) => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="2" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '1rem' }}>
+                    <td colSpan="2" style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '1rem' }}>
                       —
                     </td>
                   </tr>
@@ -224,13 +224,13 @@ const CatalogosSection = ({ api, badge, showToast }) => {
         <div className="modal-backdrop open" onClick={(e) => e.target.classList.contains('modal-backdrop') && setActiveModal(null)}>
           <div className="modal">
             <div className="modal-title">⚡ Generar períodos del año</div>
-            <p style={{ fontSize: '0.85rem', color: 'var(--admin-text-muted)', marginBottom: '1rem' }}>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
               Crea automáticamente los dos períodos del año: 1 (ene–jun) y 2 (jul–dic).
             </p>
             <form onSubmit={handleGenerarPeriodos}>
               <div className="form-group">
-                <label>Año</label>
-                <input type="number" value={gAnio} onChange={(e) => setGAnio(e.target.value)} required min="2000" max="2100" />
+                <label className="form-label">Año</label>
+                <input className="form-input" type="number" value={gAnio} onChange={(e) => setGAnio(e.target.value)} required min="2000" max="2100" />
               </div>
               <div className="modal-actions">
                 <button type="button" className="btn btn-secondary" onClick={() => setActiveModal(null)}>Cancelar</button>
@@ -249,21 +249,21 @@ const CatalogosSection = ({ api, badge, showToast }) => {
             <form onSubmit={handleCrearPeriodo}>
               <div className="modal-grid">
                 <div className="form-group">
-                  <label>Año</label>
-                  <input type="number" value={pAnio} onChange={(e) => setPAnio(e.target.value)} required />
+                  <label className="form-label">Año</label>
+                  <input className="form-input" type="number" value={pAnio} onChange={(e) => setPAnio(e.target.value)} required />
                 </div>
                 <div className="form-group">
-                  <label>N° período</label>
-                  <input type="number" value={pNum} onChange={(e) => setPNum(e.target.value)} required min="1" max="2" />
+                  <label className="form-label">N° período</label>
+                  <input className="form-input" type="number" value={pNum} onChange={(e) => setPNum(e.target.value)} required min="1" max="2" />
                 </div>
               </div>
               <div className="form-group">
-                <label>Fecha inicio</label>
-                <input type="date" value={pInicio} onChange={(e) => setPInicio(e.target.value)} required />
+                <label className="form-label">Fecha inicio</label>
+                <input className="form-input" type="date" value={pInicio} onChange={(e) => setPInicio(e.target.value)} required />
               </div>
               <div className="form-group">
-                <label>Fecha fin</label>
-                <input type="date" value={pFin} onChange={(e) => setPFin(e.target.value)} required />
+                <label className="form-label">Fecha fin</label>
+                <input className="form-input" type="date" value={pFin} onChange={(e) => setPFin(e.target.value)} required />
               </div>
               <div className="modal-actions">
                 <button type="button" className="btn btn-secondary" onClick={() => setActiveModal(null)}>Cancelar</button>
@@ -281,9 +281,10 @@ const CatalogosSection = ({ api, badge, showToast }) => {
             <div className="modal-title">🏢 Nueva área</div>
             <form onSubmit={handleCrearArea}>
               <div className="form-group">
-                <label>Nombre</label>
+                <label className="form-label">Nombre</label>
                 <input
                   type="text"
+                  className="form-input"
                   placeholder="Ej: Secretaría de Obras"
                   value={aNombre}
                   onChange={(e) => setANombre(e.target.value)}

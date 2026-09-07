@@ -104,8 +104,9 @@ const RegistrosEstadoSection = ({ api, userRole, badge, formatDate, truncate, sh
       </div>
 
       {/* Filtros */}
-      <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
+      <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.25rem' }}>
         <select
+          className="form-input"
           value={filtroNorma}
           onChange={(e) => setFiltroNorma(e.target.value)}
           style={{ flex: 1 }}
@@ -116,6 +117,7 @@ const RegistrosEstadoSection = ({ api, userRole, badge, formatDate, truncate, sh
           ))}
         </select>
         <select
+          className="form-input"
           value={filtroPeriodo}
           onChange={(e) => setFiltroPeriodo(e.target.value)}
           style={{ flex: 1 }}
@@ -144,7 +146,7 @@ const RegistrosEstadoSection = ({ api, userRole, badge, formatDate, truncate, sh
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="7" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '2rem' }}>
+                  <td colSpan="7" style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '2rem' }}>
                     Cargando...
                   </td>
                 </tr>
@@ -152,10 +154,10 @@ const RegistrosEstadoSection = ({ api, userRole, badge, formatDate, truncate, sh
                 registros.map((r) => (
                   <tr key={r.id}>
                     <td>
-                      <code style={{ background: 'var(--admin-surface)', padding: '0.1rem 0.4rem', borderRadius: '4px', fontSize: '0.75rem' }}>
+                      <code style={{ background: 'var(--primary-light)', color: 'var(--primary)', padding: '0.15rem 0.45rem', borderRadius: 'var(--radius-sm)', fontSize: '0.75rem', fontWeight: 600 }}>
                         {r.norma?.codigoNorma || '—'}
                       </code>
-                      <div style={{ fontSize: '0.7rem', color: 'var(--admin-text-muted)', marginTop: '0.15rem' }}>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.15rem' }}>
                         {truncate(r.norma?.titulo || '', 35)}
                       </div>
                     </td>
@@ -165,7 +167,7 @@ const RegistrosEstadoSection = ({ api, userRole, badge, formatDate, truncate, sh
                     </td>
                     <td>{r.area?.nombre || '—'}</td>
                     <td>{formatDate(r.creadoEn)}</td>
-                    <td style={{ fontSize: '0.8rem', color: 'var(--admin-text-muted)' }}>
+                    <td style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
                       {truncate(r.observacion || '—', 30)}
                     </td>
                     {userRole === 'ADMIN' && (
@@ -179,7 +181,7 @@ const RegistrosEstadoSection = ({ api, userRole, badge, formatDate, truncate, sh
                 ))
               ) : (
                 <tr>
-                  <td colSpan="7" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '2rem' }}>
+                  <td colSpan="7" style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '2rem' }}>
                     No hay registros de estado
                   </td>
                 </tr>
@@ -195,8 +197,8 @@ const RegistrosEstadoSection = ({ api, userRole, badge, formatDate, truncate, sh
             <div className="modal-title">📋 Registrar cambio de estado</div>
             <form onSubmit={handleCrearRegistro}>
               <div className="form-group">
-                <label>Norma</label>
-                <select value={rNorma} onChange={(e) => setRNorma(e.target.value)} required>
+                <label className="form-label">Norma</label>
+                <select className="form-input" value={rNorma} onChange={(e) => setRNorma(e.target.value)} required>
                   <option value="">— Seleccionar norma —</option>
                   {normas.map((n) => (
                     <option key={n.id} value={n.id}>{n.codigoNorma} · {n.titulo?.slice(0, 50)}</option>
@@ -204,8 +206,8 @@ const RegistrosEstadoSection = ({ api, userRole, badge, formatDate, truncate, sh
                 </select>
               </div>
               <div className="form-group">
-                <label>Período</label>
-                <select value={rPeriodo} onChange={(e) => setRPeriodo(e.target.value)} required>
+                <label className="form-label">Período</label>
+                <select className="form-input" value={rPeriodo} onChange={(e) => setRPeriodo(e.target.value)} required>
                   <option value="">— Seleccionar período —</option>
                   {periodos.map((p) => (
                     <option key={p.id} value={p.id}>{p.anio}-{p.numeroPeriodo}</option>
@@ -213,16 +215,16 @@ const RegistrosEstadoSection = ({ api, userRole, badge, formatDate, truncate, sh
                 </select>
               </div>
               <div className="form-group">
-                <label>Estado</label>
-                <select value={rEstado} onChange={(e) => setREstado(e.target.value)} required>
+                <label className="form-label">Estado</label>
+                <select className="form-input" value={rEstado} onChange={(e) => setREstado(e.target.value)} required>
                   {ESTADOS.map((est) => (
                     <option key={est} value={est}>{est.replace(/_/g, ' ')}</option>
                   ))}
                 </select>
               </div>
               <div className="form-group">
-                <label>Área responsable (opcional)</label>
-                <select value={rArea} onChange={(e) => setRArea(e.target.value)}>
+                <label className="form-label">Área responsable (opcional)</label>
+                <select className="form-input" value={rArea} onChange={(e) => setRArea(e.target.value)}>
                   <option value="">— Sin área —</option>
                   {areas.map((a) => (
                     <option key={a.id} value={a.id}>{a.nombre}</option>
@@ -230,9 +232,10 @@ const RegistrosEstadoSection = ({ api, userRole, badge, formatDate, truncate, sh
                 </select>
               </div>
               <div className="form-group">
-                <label>Observación (opcional)</label>
+                <label className="form-label">Observación (opcional)</label>
                 <input
                   type="text"
+                  className="form-input"
                   placeholder="Ej: Aprobada en sesión ordinaria"
                   value={rObservacion}
                   onChange={(e) => setRObservacion(e.target.value)}
