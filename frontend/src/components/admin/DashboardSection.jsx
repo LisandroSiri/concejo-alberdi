@@ -95,12 +95,13 @@ const DashboardSection = ({ api, userRole, badge, formatDate, truncate, showToas
                 <th>Tipo</th>
                 <th>Título</th>
                 <th>Fecha</th>
+                <th>Estado</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="4" style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '2rem' }}>
+                  <td colSpan="5" style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '2rem' }}>
                     Cargando...
                   </td>
                 </tr>
@@ -119,11 +120,14 @@ const DashboardSection = ({ api, userRole, badge, formatDate, truncate, showToas
                       {truncate(n.titulo, 50)}
                     </td>
                     <td>{formatDate(n.fechaSancion)}</td>
+                    <td>
+                      <span dangerouslySetInnerHTML={{ __html: badge(n.estadoActual, n.estadoActual ? n.estadoActual.replace(/_/g, ' ') : '—') }} />
+                    </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="4" style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '2rem' }}>
+                  <td colSpan="5" style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '2rem' }}>
                     No hay normas cargadas
                   </td>
                 </tr>

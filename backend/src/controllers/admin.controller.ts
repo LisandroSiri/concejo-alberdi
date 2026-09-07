@@ -11,7 +11,7 @@ export const getDashboard = async (_req: Request, res: Response): Promise<void> 
     prisma.norma.findMany({
       take: 5,
       orderBy: { fechaSancion: 'desc' },
-      select: { id: true, codigoNorma: true, titulo: true, tipo: true, fechaSancion: true },
+      select: { id: true, codigoNorma: true, titulo: true, tipo: true, fechaSancion: true, estadoActual: true },
     }),
   ]);
   res.json({ totalNormas, totalConcejales, totalTemas, totalBloques, normasPorTipo, ultimasNormas });

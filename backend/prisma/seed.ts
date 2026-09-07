@@ -77,8 +77,10 @@ async function main() {
   console.log(`✔ Tema creado: ${tema.nombre}`);
 
   // ── Norma de prueba ───────────────────────────────────────────────────────
-  const norma = await prisma.norma.create({
-    data: {
+  const norma = await prisma.norma.upsert({
+    where: { codigoNorma: 'ORDENANZA-2325-2026' },
+    update: { estadoActual: 'VIGENTE' },
+    create: {
       numero: 2325,
       anio: 2026,
       codigoNorma: 'ORDENANZA-2325-2026',
@@ -86,11 +88,12 @@ async function main() {
       origen: 'CONCEJO',
       titulo: 'Norma de prueba',
       fechaSancion: new Date('2026-03-15'),
+      estadoActual: 'VIGENTE',
       autores: { create: [{ idUsuario: concejal.id }] },
       temas: { create: [{ idTema: tema.id }] },
     },
   });
-  console.log(`✔ Norma creada: ${norma.codigoNorma}`);
+  console.log(`✔ Norma lista: ${norma.codigoNorma}`);
 
   // ── Historial de estados ──────────────────────────────────────────────────
   await prisma.registroEstado.create({
@@ -109,6 +112,10 @@ async function main() {
       estado: 'VIGENTE',
       observacion: 'Aprobada en sesión ordinaria',
     },
+  });
+  await prisma.norma.update({
+    where: { id: norma.id },
+    data: { estadoActual: 'VIGENTE' },
   });
   console.log(`✔ Registros de estado creados`);
 

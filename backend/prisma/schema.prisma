@@ -47,7 +47,7 @@ model Usuario {
 
   // Solo relevante cuando rol = CONCEJAL
   idBloque     Int?
-  bloque       BloquePolitico? @relation(fields: [idBloque], references: [id])
+  bloque       BloquePolitico? @relation(fields: [idBloque], references: [id], onDelete: SetNull)
 
   normasAutor  NormaAutor[]
 
@@ -94,13 +94,15 @@ model Norma {
 
   rutaPdf      String?
   hashPdf      String?
-  vigente      Boolean  @default(true)
+  estadoActual EstadoNorma @default(PRESENTADA)
 
   autores      NormaAutor[]
   temas        NormaTema[]
   estados      RegistroEstado[]
 
-  @@unique([numero, anio, codigoNorma])
+  @@unique([tipo, numero, anio])
+  @@unique([codigoNorma])
+  @@index([estadoActual])
   @@map("normas")
 }
 
@@ -174,7 +176,7 @@ model RegistroEstado {
 
   norma       Norma          @relation(fields: [idNorma], references: [id], onDelete: Cascade)
   periodo     Periodo        @relation(fields: [idPeriodo], references: [id])
-  area        AreaEjecutivo? @relation(fields: [idArea], references: [id])
+  area        AreaEjecutivo? @relation(fields: [idArea], references: [id], onDelete: SetNull)
 
   @@index([idNorma, creadoEn])
   @@map("registros_estado")

@@ -38,8 +38,7 @@ export const estadoActual = async (req: Request, res: Response): Promise<void> =
 };
 
 // ─── REGISTRAR un cambio de estado ───────────────────────────────────────────
-// Siempre crea un registro nuevo — nunca pisa el anterior.
-// Así se construye el historial completo de la norma.
+// Siempre crea un registro nuevo en el historial y actualiza atómicamente el estadoActual de la norma.
 export const crearRegistro = async (req: Request, res: Response): Promise<void> => {
   const { idNorma, idPeriodo, estado, observacion, idArea } = req.body;
 
@@ -48,16 +47,27 @@ export const crearRegistro = async (req: Request, res: Response): Promise<void> 
     return;
   }
 
-  const registro = await prisma.registroEstado.create({
-    data: {
-      idNorma: Number(idNorma),
-      idPeriodo: Number(idPeriodo),
-      estado,
-      observacion,
-      idArea: idArea ? Number(idArea) : null,
-    },
-    include: { norma: true, periodo: true, area: true },
+  const registro = await prisma.$transaction(async (tx) => {
+    const nuevoRegistro = await tx.registroEstado.create({
+      data: {
+        idNorma: Number(idNorma),
+        idPeriodo: Number(idPeriodo),
+        estado,
+        observacion,
+        idArea: idArea ? Number(idArea) : null,
+      },
+      include: { norma: true, periodo: true, area: true },
+    });
+
+    // Actualizar inmediatamente el estado actual de la norma
+    await tx.norma.update({
+      where: { id: Number(idNorma) },
+      data: { estadoActual: estado },
+    });
+
+    return nuevoRegistro;
   });
+
   res.status(201).json(registro);
 };
 
@@ -80,9 +90,30 @@ export const actualizarRegistro = async (req: Request, res: Response): Promise<v
 };
 
 // ─── ELIMINAR un registro ─────────────────────────────────────────────────────
+// Elimina el registro del historial y recalcula el estadoActual de la norma.
 export const eliminarRegistro = async (req: Request, res: Response): Promise<void> => {
   const id = Number(req.params.id);
-  await prisma.registroEstado.delete({ where: { id } });
+
+  await prisma.$transaction(async (tx) => {
+    const reg = await tx.registroEstado.findUnique({ where: { id } });
+    if (!reg) return;
+
+    await tx.registroEstado.delete({ where: { id } });
+
+    // Buscar el estado más reciente que haya quedado en la norma
+    const ultimoRestante = await tx.registroEstado.findFirst({
+      where: { idNorma: reg.idNorma },
+      orderBy: { creadoEn: 'desc' },
+    });
+
+    const estadoFinal = ultimoRestante ? ultimoRestante.estado : 'PRESENTADA';
+
+    await tx.norma.update({
+      where: { id: reg.idNorma },
+      data: { estadoActual: estadoFinal },
+    });
+  });
+
   res.status(204).send();
 };
 

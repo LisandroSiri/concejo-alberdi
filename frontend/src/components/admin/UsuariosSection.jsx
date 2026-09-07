@@ -13,6 +13,9 @@ const UsuariosSection = ({ api, userRole, badge, showToast }) => {
   const [uRol, setURol] = useState('OPERADOR');
   const [uBlo, setUBlo] = useState('');
 
+  const [resetModalUser, setResetModalUser] = useState(null);
+  const [nuevaClave, setNuevaClave] = useState('');
+
   const loadUsuarios = useCallback(async () => {
     if (userRole !== 'ADMIN') return;
     setLoading(true);
@@ -76,6 +79,22 @@ const UsuariosSection = ({ api, userRole, badge, showToast }) => {
     }
   };
 
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    if (!nuevaClave || nuevaClave.length < 4) {
+      showToast('La contraseña debe tener al menos 4 caracteres', 'error');
+      return;
+    }
+    try {
+      await api('PATCH', `/auth/usuarios/${resetModalUser.id}/password`, { password: nuevaClave });
+      showToast(` Contraseña de ${resetModalUser.nombre} actualizada`, 'success');
+      setResetModalUser(null);
+      setNuevaClave('');
+    } catch (e) {
+      showToast('Error al restablecer contraseña: ' + e.message, 'error');
+    }
+  };
+
   if (userRole !== 'ADMIN') {
     return (
       <div className="section active">
@@ -133,7 +152,17 @@ const UsuariosSection = ({ api, userRole, badge, showToast }) => {
                     <td>
                       <span dangerouslySetInnerHTML={{ __html: badge(u.activo ? 'activo' : 'inactivo', u.activo ? 'Activo' : 'Inactivo') }} />
                     </td>
-                    <td style={{ textAlign: 'right' }}>
+                    <td style={{ textAlign: 'right', display: 'flex', gap: '0.4rem', justifyContent: 'flex-end' }}>
+                      <button
+                        className="btn btn-secondary btn-sm"
+                        title="Restablecer contraseña"
+                        onClick={() => {
+                          setResetModalUser(u);
+                          setNuevaClave('');
+                        }}
+                      >
+                         Reset Clave
+                      </button>
                       <button className="btn btn-secondary btn-sm" onClick={() => handleToggleUsuario(u.id)}>
                         {u.activo ? '⏸ Desactivar' : '▶ Activar'}
                       </button>
@@ -151,6 +180,40 @@ const UsuariosSection = ({ api, userRole, badge, showToast }) => {
           </table>
         </div>
       </div>
+
+      {/* MODAL RESET PASSWORD */}
+      {resetModalUser && (
+        <div className="modal-backdrop open" onClick={(e) => e.target.classList.contains('modal-backdrop') && setResetModalUser(null)}>
+          <div className="modal">
+            <div className="modal-title"> Restablecer contraseña</div>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.25rem' }}>
+              Estás asignando una nueva contraseña para <strong>{resetModalUser.nombre}</strong> ({resetModalUser.email}).
+            </p>
+            <form onSubmit={handleResetPassword}>
+              <div className="form-group">
+                <label className="form-label">Nueva contraseña</label>
+                <input
+                  type="password"
+                  className="form-input"
+                  placeholder="Mínimo 4 caracteres"
+                  value={nuevaClave}
+                  onChange={(e) => setNuevaClave(e.target.value)}
+                  autoFocus
+                  required
+                />
+              </div>
+              <div className="modal-actions">
+                <button type="button" className="btn btn-secondary" onClick={() => setResetModalUser(null)}>
+                  Cancelar
+                </button>
+                <button type="submit" className="btn btn-primary">
+                  Guardar nueva contraseña
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {isCreateModalOpen && (
         <div className="modal-backdrop open" onClick={(e) => e.target.classList.contains('modal-backdrop') && setIsCreateModalOpen(false)}>

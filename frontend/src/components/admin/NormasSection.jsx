@@ -7,7 +7,11 @@ const NormasSection = ({ api, userRole, badge, showToast }) => {
   // Filter States
   const [fTipo, setFTipo] = useState('');
   const [fAno, setFAno] = useState('');
-  const [fVigente, setFVigente] = useState('');
+  const [fEstado, setFEstado] = useState('');
+
+  // Catalogos para modal
+  const [concejales, setConcejales] = useState([]);
+  const [temas, setTemas] = useState([]);
 
   // Create Modal State
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -17,6 +21,8 @@ const NormasSection = ({ api, userRole, badge, showToast }) => {
   const [nAno, setNAno] = useState(new Date().getFullYear());
   const [nTitulo, setNTitulo] = useState('');
   const [nFecha, setNFecha] = useState('');
+  const [nAutorId, setNAutorId] = useState('');
+  const [nTemaId, setNTemaId] = useState('');
 
   // PDF Modal State
   const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
@@ -29,7 +35,7 @@ const NormasSection = ({ api, userRole, badge, showToast }) => {
     const params = new URLSearchParams();
     if (fTipo) params.set('tipo', fTipo);
     if (fAno) params.set('anio', fAno);
-    if (fVigente !== '') params.set('vigente', fVigente);
+    if (fEstado) params.set('estado', fEstado);
 
     try {
       const data = await api('GET', `/normas?${params}`);
@@ -40,16 +46,31 @@ const NormasSection = ({ api, userRole, badge, showToast }) => {
     } finally {
       setLoading(false);
     }
-  }, [api, fTipo, fAno, fVigente, showToast]);
+  }, [api, fTipo, fAno, fEstado, showToast]);
+
+  const loadCatalogos = useCallback(async () => {
+    try {
+      const [usuariosData, temasData] = await Promise.all([
+        api('GET', '/auth/usuarios'),
+        api('GET', '/temas'),
+      ]);
+      const soloConcejales = (usuariosData || []).filter((u) => u.rol === 'CONCEJAL');
+      setConcejales(soloConcejales);
+      setTemas(temasData || []);
+    } catch (e) {
+      console.error('Error al cargar catálogos:', e);
+    }
+  }, [api]);
 
   useEffect(() => {
     loadNormas();
-  }, [loadNormas]);
+    loadCatalogos();
+  }, [loadNormas, loadCatalogos]);
 
   const resetFilters = () => {
     setFTipo('');
     setFAno('');
-    setFVigente('');
+    setFEstado('');
   };
 
   const handleCrearNorma = async (e) => {
@@ -62,6 +83,8 @@ const NormasSection = ({ api, userRole, badge, showToast }) => {
         anio: parseInt(nAno),
         titulo: nTitulo.trim(),
         fechaSancion: nFecha,
+        autorIds: nOrigen === 'CONCEJO' && nAutorId ? [parseInt(nAutorId)] : [],
+        temaIds: nTemaId ? [parseInt(nTemaId)] : [],
       };
 
       if (!data.titulo) throw new Error('El título es obligatorio');
@@ -70,12 +93,14 @@ const NormasSection = ({ api, userRole, badge, showToast }) => {
 
       await api('POST', '/normas', data);
       setIsCreateModalOpen(false);
-      showToast('✅ Norma creada correctamente', 'success');
+      showToast('✅ Norma creada correctamente (Estado: Presentada)', 'success');
       
       // Reset form
       setNNumero('');
       setNTitulo('');
       setNFecha('');
+      setNAutorId('');
+      setNTemaId('');
       
       loadNormas();
     } catch (e) {
@@ -149,7 +174,7 @@ const NormasSection = ({ api, userRole, badge, showToast }) => {
 
       <div className="filters-bar" id="normas-filters">
         <select value={fTipo} onChange={(e) => setFTipo(e.target.value)}>
-          <option value="">Todos</option>
+          <option value="">Todos los tipos</option>
           <option value="ORDENANZA">ORDENANZA</option>
           <option value="DECRETO">DECRETO</option>
           <option value="RESOLUCION">RESOLUCION</option>
@@ -162,10 +187,14 @@ const NormasSection = ({ api, userRole, badge, showToast }) => {
           value={fAno}
           onChange={(e) => setFAno(e.target.value)}
         />
-        <select value={fVigente} onChange={(e) => setFVigente(e.target.value)}>
-          <option value="">Vigencia</option>
-          <option value="true">Vigente</option>
-          <option value="false">No vigente</option>
+        <select value={fEstado} onChange={(e) => setFEstado(e.target.value)}>
+          <option value="">Todos los estados</option>
+          <option value="PRESENTADA">PRESENTADA</option>
+          <option value="VIGENTE">VIGENTE</option>
+          <option value="PARCIALMENTE_CUMPLIDA">PARCIALMENTE CUMPLIDA</option>
+          <option value="CUMPLIDA">CUMPLIDA</option>
+          <option value="INCUMPLIDA">INCUMPLIDA</option>
+          <option value="DEROGADA">DEROGADA</option>
         </select>
         <button className="btn btn-secondary btn-sm" onClick={loadNormas}>
           🔍 Buscar
@@ -184,7 +213,7 @@ const NormasSection = ({ api, userRole, badge, showToast }) => {
                 <th>Tipo</th>
                 <th>Fecha presentación</th>
                 <th>Título</th>
-                <th>Presentado</th>
+                <th>Presentado por</th>
                 <th>Estado</th>
                 <th>PDF</th>
                 <th style={{ textAlign: 'right' }}>Acciones</th>
@@ -212,9 +241,13 @@ const NormasSection = ({ api, userRole, badge, showToast }) => {
                     <td className="truncate" title={n.titulo || ''}>
                       {n.titulo}
                     </td>
-                    <td>{n.autores?.[0]?.usuario?.nombre + ' (' + n.autores?.[0]?.usuario?.bloque?.sigla + ')' || '—'}</td>
                     <td>
-                      <span dangerouslySetInnerHTML={{ __html: badge(String(n.vigente), n.vigente ? 'Vigente' : 'No vigente') }} />
+                      {n.autores?.[0]?.usuario?.nombre
+                        ? `${n.autores[0].usuario.nombre}${n.autores[0].usuario.bloque?.sigla ? ` (${n.autores[0].usuario.bloque.sigla})` : ''}`
+                        : (n.origen === 'EJECUTIVO' ? 'Poder Ejecutivo' : '—')}
+                    </td>
+                    <td>
+                      <span dangerouslySetInnerHTML={{ __html: badge(n.estadoActual, n.estadoActual ? n.estadoActual.replace(/_/g, ' ') : '—') }} />
                     </td>
                     <td>
                       {n.rutaPdf ? (
@@ -280,6 +313,33 @@ const NormasSection = ({ api, userRole, badge, showToast }) => {
                   <input className="form-input" type="number" value={nAno} onChange={(e) => setNAno(e.target.value)} required />
                 </div>
               </div>
+
+              {nOrigen === 'CONCEJO' && (
+                <div className="form-group">
+                  <label className="form-label">Concejal autor</label>
+                  <select className="form-input" value={nAutorId} onChange={(e) => setNAutorId(e.target.value)}>
+                    <option value="">— Seleccionar concejal —</option>
+                    {concejales.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.nombre} {c.bloque?.sigla ? `(${c.bloque.sigla})` : ''}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              <div className="form-group">
+                <label className="form-label">Tema</label>
+                <select className="form-input" value={nTemaId} onChange={(e) => setNTemaId(e.target.value)}>
+                  <option value="">— Seleccionar tema (opcional) —</option>
+                  {temas.map((t) => (
+                    <option key={t.id} value={t.id}>
+                      {t.nombre}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               <div className="form-group">
                 <label className="form-label">Título</label>
                 <input
@@ -292,7 +352,7 @@ const NormasSection = ({ api, userRole, badge, showToast }) => {
                 />
               </div>
               <div className="form-group">
-                <label className="form-label">Fecha de sanción</label>
+                <label className="form-label">Fecha de sanción / presentación</label>
                 <input className="form-input" type="date" value={nFecha} onChange={(e) => setNFecha(e.target.value)} required />
               </div>
               <div className="modal-actions">

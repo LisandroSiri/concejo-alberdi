@@ -58,3 +58,28 @@ export const toggleUsuario = async (req: Request, res: Response): Promise<void> 
   const updated = await prisma.usuario.update({ where: { id }, data: { activo: !usuario.activo } });
   res.json({ activo: updated.activo });
 };
+
+export const resetPassword = async (req: Request, res: Response): Promise<void> => {
+  const id = Number(req.params.id);
+  const { password } = req.body;
+
+  if (!password || password.trim().length < 4) {
+    res.status(400).json({ error: 'La nueva contraseña debe tener al menos 4 caracteres' });
+    return;
+  }
+
+  const usuario = await prisma.usuario.findUnique({ where: { id } });
+  if (!usuario) {
+    res.status(404).json({ error: 'Usuario no encontrado' });
+    return;
+  }
+
+  const passwordHash = await bcrypt.hash(password, 10);
+  await prisma.usuario.update({
+    where: { id },
+    data: { passwordHash },
+  });
+
+  res.json({ message: 'Contraseña actualizada correctamente' });
+};
+
